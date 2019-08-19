@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.js": "/portal/static/js/main.05ebaf3a.chunk.js",
+    "main.js.map": "/portal/static/js/main.05ebaf3a.chunk.js.map",
+    "runtime.js": "/portal/runtime.js?v=893d8600",
+    "runtime.js.map": "/portal/runtime.js.map?v=893d8600",
+    "vendors.js": "/portal/static/js/vendors.9c2318bb.chunk.js",
+    "vendors.js.map": "/portal/static/js/vendors.9c2318bb.chunk.js.map",
+    "index.html": "/portal/index.html",
+    "precache-manifest.a5e382d55a057224a96e46a350e5f3ca.js": "/portal/precache-manifest.a5e382d55a057224a96e46a350e5f3ca.js",
+    "service-worker.js": "/portal/service-worker.js"
+  }
+}
