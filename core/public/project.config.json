@@ -1,17 +1,5 @@
 {
   "projects": [
-    {
-      "name": "portal",
-      "path": ["/portal"],
-      "prefix": "/portal",
-      "main": {
-        "js": [
-          "/portal/runtime.js?v=893d8600",
-          "/portal/static/js/vendors.9c2318bb.chunk.js",
-          "/portal/static/js/main.05ebaf3a.chunk.js"
-        ],
-        "css": []
-      }
-    }
+    {"name":"portal","path":["/portal"],"prefix":"/portal","main":{"js":["/portal/runtime.js?v=02521395","/portal/static/js/main.d41e9278.chunk.js"],"css":[]}}
   ]
 }

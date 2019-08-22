@@ -1,1 +1,1 @@
-{"name":"portal","path":["/portal"],"prefix":"/portal","main":{"js":["/portal/runtime.js?v=893d8600","/portal/static/js/vendors.9c2318bb.chunk.js","/portal/static/js/main.05ebaf3a.chunk.js"],"css":[]}}
+{"name":"portal","path":["/portal"],"prefix":"/portal","main":{"js":["/runtime.js?v=20c9052f","/static/js/main.82823cc6.chunk.js"],"css":[]}}

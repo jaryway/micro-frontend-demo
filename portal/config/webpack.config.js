@@ -198,7 +198,7 @@ module.exports = function(webpackEnv) {
       jsonpFunction: `webpackJsonp${appPackageJson.name}`
     },
     optimization: {
-      minimize: isEnvProduction,
+      minimize: false, //isEnvProduction,
       minimizer: [
         // This is only used in production mode
         new TerserPlugin({
@@ -303,15 +303,18 @@ module.exports = function(webpackEnv) {
         name: () => "runtime"
       }
     },
-    // externals: {
-    //   react: "React",
-    //   "react-dom": "ReactDOM",
-    //   "react-router-dom": "react-router-dom",
-    //   "@babel/polyfill": "@babel/polyfill",
-    //   redux: "redux",
-    //   "react-redux": "react-redux",
-    //   "react-loadable": "react-loadable"
-    // },
+    externals: {
+      // react: {
+      //   root: "React"
+      // },
+      react: "react",
+      "react-dom": "react-dom",
+      "react-router-dom": "react-router-dom",
+      "@babel/polyfill": "@babel/polyfill",
+      redux: "redux",
+      "react-redux": "react-redux",
+      "react-loadable": "react-loadable"
+    },
     resolve: {
       // This allows you to set a fallback for where Webpack should look for modules.
       // We placed these paths second because we want `node_modules` to "win"
@@ -354,6 +357,7 @@ module.exports = function(webpackEnv) {
       ]
     },
     module: {
+      // noParse: [/react/,/react-dom/],
       strictExportPresence: true,
       rules: [
         // Disable require.ensure as it's not a standard language feature.

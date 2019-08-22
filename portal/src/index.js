@@ -48,7 +48,8 @@ function domElementGetter() {
 
   // return el;
 
-  return document.querySelector(".ant-layout-content #sub-module");
+  // return document.querySelector(".ant-layout-content #sub-module");
+  return document.getElementById("root");
 }
 
 export const bootstrap = [reactLifecycles.bootstrap];
