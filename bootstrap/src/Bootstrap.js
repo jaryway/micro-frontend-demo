@@ -1,5 +1,5 @@
 "use strict";
-import '../libs/es6-promise.auto.min'
+// import '../libs/es6-promise.auto.min'
 import * as singleSpa from 'single-spa'; 
 import { registerApp } from './Register'
 

@@ -22,9 +22,11 @@
     [
       "@babel/plugin-transform-runtime",
       {
-        "helpers": false,
-        "polyfill": false,
-        "regenerator": true
+        "absoluteRuntime": false,
+        "corejs": false,
+        "helpers": true,
+        "regenerator": true,
+        "useESModules": false
       }
     ]
   ]
