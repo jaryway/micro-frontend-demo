@@ -1,10 +1,10 @@
 // import '../libs/system'
 // import '../libs/es6-promise.auto.min'
-import "systemjs/dist/system";
-import "systemjs/dist/extras/amd";
-import "systemjs/dist/extras/use-default";
-import * as singleSpa from "single-spa";
-import { GlobalEventDistributor } from "./GlobalEventDistributor";
+// import "systemjs/dist/system";
+// import "systemjs/dist/extras/amd";
+// import "systemjs/dist/extras/use-default";
+import * as singleSpa from 'single-spa';
+import { GlobalEventDistributor } from './GlobalEventDistributor';
 const globalEventDistributor = new GlobalEventDistributor();
 
 // hash 模式
@@ -53,9 +53,7 @@ export async function registerApp(params) {
 
   // 尝试导入store
   try {
-    storeModule = params.store
-      ? await SystemJS.import(params.store)
-      : { storeInstance: null };
+    storeModule = params.store ? await window.System.import(params.store) : { storeInstance: null };
   } catch (e) {
     console.log(`Could not load store of app ${params.name}.`, e);
     //如果失败则不注册该模块
@@ -73,16 +71,16 @@ export async function registerApp(params) {
   //准备自定义的props,传入每一个单独工程项目
   customProps = {
     store: storeModule,
-    globalEventDistributor: globalEventDistributor
+    globalEventDistributor: globalEventDistributor,
   };
   singleSpa.registerApplication(
     params.name,
-    () => SystemJS.import(params.main),
+    () => window.System.import(params.main),
     params.base ? () => true : pathPrefix(params),
     customProps
   );
 }
 
 function isArray(o) {
-  return Object.prototype.toString.call(o) == "[object Array]";
+  return Object.prototype.toString.call(o) == '[object Array]';
 }

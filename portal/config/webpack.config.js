@@ -269,13 +269,13 @@ module.exports = function(webpackEnv) {
         // chunks: "all",
         // name: false
         cacheGroups: {
-          vendors: {
-            // 基本框架
-            chunks: "all",
-            test: /(react|react-dom|react-router-dom|@babel\/polyfill|redux|react-redux|react-loadable)/,
-            priority: 100,
-            name: "vendors"
-          },
+          // vendors: {
+          //   // 基本框架
+          //   chunks: "all",
+          //   test: /(react|react-dom|react-router-dom|@babel\/polyfill|redux|react-redux|react-loadable)/,
+          //   priority: 100,
+          //   name: "vendors"
+          // },
           "async-commons": {
             // 其余异步加载包
             chunks: "async",
