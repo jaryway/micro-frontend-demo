@@ -1,9 +1,9 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import singleSpaReact from "single-spa-react";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import singleSpaReact from 'single-spa-react';
 
-import * as serviceWorker from "./serviceWorker";
-import RootComponent from "./root.component";
+import * as serviceWorker from './serviceWorker';
+import RootComponent from './root.component';
 // ReactDOM.render(<App />, document.getElementById('root'));
 
 // if (process.env.NODE_ENV === "development" && !MICRO) {
@@ -25,7 +25,7 @@ const reactLifecycles = singleSpaReact({
     return <RootComponent />;
   },
   // 可能会有加载顺序的问题
-  domElementGetter
+  domElementGetter,
 });
 
 function domElementGetter() {
@@ -48,8 +48,8 @@ function domElementGetter() {
 
   // return el;
 
-  // return document.querySelector(".ant-layout-content #sub-module");
-  return document.getElementById("root");
+  return document.querySelector('.ant-layout-content #sub-module');
+  return document.getElementById('root');
 }
 
 export const bootstrap = [reactLifecycles.bootstrap];

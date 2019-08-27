@@ -26,7 +26,6 @@ const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
 const eslint = require('eslint');
-const HtmlWebpackProjectConfigPlugin = require('html-webpack-project-config-plugin');
 
 const postcssNormalize = require('postcss-normalize');
 
@@ -163,15 +162,11 @@ module.exports = function(webpackEnv) {
       pathinfo: isEnvDevelopment,
       // There will be one main bundle, and one file per asynchronous chunk.
       // In development, it does not produce real files.
-      // filename: isEnvProduction
-      //   ? "static/js/[name].[contenthash:8].js"
-      //   : isEnvDevelopment && "static/js/bundle.js",
-      filename: '[name].js?v=[contenthash:8]',
+      filename: isEnvProduction
+        ? 'static/js/[name].[contenthash:8].js'
+        : isEnvDevelopment && 'static/js/bundle.js',
       // TODO: remove this when upgrading to webpack 5
       futureEmitAssets: true,
-      // "var" | "assign" | "this" | "window" | "self" | "global" | "commonjs" | "commonjs2" | "commonjs-module" | "amd" | "amd-require" | "umd" | "umd2" | "jsonp" | "system"
-      libraryTarget: 'amd',
-      library: appPackageJson.name,
       // There are also additional JS chunk files if you use code splitting.
       chunkFilename: isEnvProduction
         ? 'static/js/[name].[contenthash:8].chunk.js'
@@ -185,11 +180,10 @@ module.exports = function(webpackEnv) {
         : isEnvDevelopment && (info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
       // Prevents conflicts when multiple Webpack runtimes (from different apps)
       // are used on the same page.
-      // jsonpFunction: `JsonpPortal${appPackageJson.name}`,
-      jsonpFunction: `JsonpPortal`,
+      jsonpFunction: `webpackJsonp${appPackageJson.name}`,
     },
     optimization: {
-      minimize: false, //isEnvProduction,
+      minimize: false, // isEnvProduction,
       minimizer: [
         // This is only used in production mode
         new TerserPlugin({
@@ -257,64 +251,25 @@ module.exports = function(webpackEnv) {
       // https://twitter.com/wSokra/status/969633336732905474
       // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
       splitChunks: {
-        // chunks: "all",
-        // name: false
-        cacheGroups: {
-          // vendors: {
-          //   // 基本框架
-          //   chunks: "all",
-          //   test: /(react|react-dom|react-router-dom|@babel\/polyfill|redux|react-redux|react-loadable)/,
-          //   priority: 100,
-          //   name: "vendors"
-          // },
-          'async-commons': {
-            // 其余异步加载包
-            chunks: 'async',
-            minChunks: 2,
-            name: 'async-commons',
-            priority: 90,
-          },
-          commons: {
-            // 其余同步加载包
-            // chunks: 'all',
-            chunks: function(chunk) {
-              console.log(chunk.name, '001010');
-              // 这里的name 可以参考在使用`webpack-ant-icon-loader`时指定的`chunkName`
-              return chunk.name !== 'antd-icons';
-            },
-            minChunks: 2,
-            name: 'commons',
-            priority: 80,
-          },
-        },
+        chunks: 'all',
+        name: false,
       },
       // Keep the runtime chunk separated to enable long term caching
       // https://twitter.com/wSokra/status/969679223278505985
-      runtimeChunk: {
-        name: () => 'runtime',
-      },
+      runtimeChunk: true,
     },
+    // 公共部分不要打包到项目中
     externals: [
       {
-        react: 'react',
-        'react-dom': 'react-dom',
-        'prop-types': 'prop-types',
-        'react-router-dom': 'react-router-dom',
-        redux: 'redux',
-        'react-redux': 'react-redux',
-        history: 'history',
-        'single-spa': 'single-spa',
+        react: 'React',
+        'react-dom': 'ReactDOM',
+        'prop-types': 'PropTypes',
+        'react-router-dom': 'ReactRouterDOM',
+        redux: 'Redux',
+        'react-redux': 'ReactRedux',
+        history: 'History',
+        'single-spa': 'singleSpa',
       },
-      // {
-      //   react: 'React',
-      //   'react-dom': 'ReactDOM',
-      //   'prop-types': 'PropTypes',
-      //   'react-router-dom': 'ReactRouterDOM',
-      //   redux: 'Redux',
-      //   'react-redux': 'ReactRedux',
-      //   history: 'History',
-      //   'single-spa': 'singleSpa',
-      // },
     ],
     resolve: {
       // This allows you to set a fallback for where Webpack should look for modules.
@@ -356,7 +311,6 @@ module.exports = function(webpackEnv) {
       ],
     },
     module: {
-      // noParse: [/react/,/react-dom/],
       strictExportPresence: true,
       rules: [
         // Disable require.ensure as it's not a standard language feature.
@@ -379,15 +333,6 @@ module.exports = function(webpackEnv) {
           ],
           include: paths.appSrc,
         },
-        // {
-        //   test: require.resolve('react'),
-        //   use: [
-        //     {
-        //       loader: require.resolve('expose-loader'),
-        //       options: 'react',
-        //     },
-        //   ],
-        // },
         {
           // "oneOf" will traverse all following loaders until one will
           // match the requirements. When no loader matches it will fall
@@ -404,7 +349,6 @@ module.exports = function(webpackEnv) {
                 name: 'static/media/[name].[hash:8].[ext]',
               },
             },
-
             // Process application JS with Babel.
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.
             {
@@ -543,6 +487,7 @@ module.exports = function(webpackEnv) {
         },
       ],
     },
+
     plugins: [
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
@@ -570,23 +515,11 @@ module.exports = function(webpackEnv) {
             : undefined
         )
       ),
-      new HtmlWebpackProjectConfigPlugin({
-        config: {
-          name: 'portal',
-          path: ['/portal'],
-          prefix: '/portal',
-          // store: ""
-        },
-        configFilename: 'project.json',
-      }),
-      // new webpack.ProvidePlugin({
-      //   'window.React': 'react',
-      // }),
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
-      isEnvProduction &&
-        shouldInlineRuntimeChunk &&
-        new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
+      // isEnvProduction &&
+      //   shouldInlineRuntimeChunk &&
+      //   new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
       // Makes some environment variables available in index.html.
       // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
       // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">

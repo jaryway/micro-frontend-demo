@@ -1,11 +1,7 @@
-// import '../libs/system'
-// import '../libs/es6-promise.auto.min'
-// import "systemjs/dist/system";
-// import "systemjs/dist/extras/amd";
-// import "systemjs/dist/extras/use-default";
 import * as singleSpa from 'single-spa';
 import { GlobalEventDistributor } from './GlobalEventDistributor';
 const globalEventDistributor = new GlobalEventDistributor();
+const SystemJS = window.System;
 
 // hash 模式
 export function hashPrefix(app) {
@@ -73,9 +69,28 @@ export async function registerApp(params) {
     store: storeModule,
     globalEventDistributor: globalEventDistributor,
   };
+
   singleSpa.registerApplication(
     params.name,
-    () => window.System.import(params.main),
+    async () => {
+      let component;
+
+      for (let i = 0; i < element.main.css.length; i++) {
+        await SystemJS.import(element.main.css[i]);
+      }
+
+      // 依次加载入口文件（runtime，main），返回最后一个
+      for (let i = 0; i < element.main.js.length; i++) {
+        component = await SystemJS.import(element.main.js[i])
+          .then(m => {
+            console.log('element.main.js', i, m);
+            return m;
+          })
+          .catch(er => console.log(er));
+      }
+      console.log(component, 'component');
+      return component;
+    },
     params.base ? () => true : pathPrefix(params),
     customProps
   );

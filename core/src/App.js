@@ -33,7 +33,7 @@ class App extends React.Component {
               <Menu.Item key='1'>
                 <Link to='/portal' title='门户'>
                   <Icon type='user' />
-                  <span>门户</span>
+                  <span>门户0</span>
                 </Link>
               </Menu.Item>
               <Menu.Item key='2'>

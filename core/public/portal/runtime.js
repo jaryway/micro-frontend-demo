@@ -137,9 +137,9 @@
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "/";
+/******/ 	__webpack_require__.p = "/portal/";
 /******/
-/******/ 	var jsonpArray = window["webpackJsonpportal"] = window["webpackJsonpportal"] || [];
+/******/ 	var jsonpArray = window["JsonpPortal"] = window["JsonpPortal"] || [];
 /******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
 /******/ 	jsonpArray.push = webpackJsonpCallback;
 /******/ 	jsonpArray = jsonpArray.slice();
@@ -152,4 +152,4 @@
 /******/ })
 /************************************************************************/
 /******/ ([]);
-//# sourceMappingURL=runtime.js.map?v=20c9052f
+//# sourceMappingURL=runtime.js.map?v=0dcaadad

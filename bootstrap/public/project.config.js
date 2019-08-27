@@ -1,22 +1,22 @@
-// module.exports = {
-//   projects: [
-//     // {
-//     //   name: 'core',
-//     //   prefix: '/',
-//     //   main: '/main.js',
-//     //   // store: "/core/store.js",
-//     //   base: true,
-//     // },
-//     {
-//       name: 'portal',
-//       path: ['/portal'],
-//       prefix: '/portal/',
-//       // main: '/microfrontend-submodule-demo/main.js',
-//       main: ['/portal/static/js/1.af0e8802.chunk.js', '/portal/main.js?v=b55cbe4e'],
-//       // store: "/microfrontend-submodule-demo/store.js"
-//     },
-//   ],
-// };
+module.exports = {
+  projects: [
+    // {
+    //   name: 'core',
+    //   prefix: '/',
+    //   main: '/main.js',
+    //   // store: "/core/store.js",
+    //   base: true,
+    // },
+    {
+      name: 'portal',
+      path: ['/portal'],
+      prefix: '/portal/',
+      // main: '/microfrontend-submodule-demo/main.js',
+      main: ['/portal/static/js/1.af0e8802.chunk.js', '/portal/main.js?v=b55cbe4e'],
+      // store: "/microfrontend-submodule-demo/store.js"
+    },
+  ],
+};
 
 // (() => {
 //   return {

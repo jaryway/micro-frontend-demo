@@ -3,19 +3,24 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title></title>
+    <title>控制台</title>
   </head>
   <body>
     <div id="root"></div>
-    <!-- <script src="/system.min.js"></script> -->
-    <script src="/vendors.js"></script>
+    <script src="/lib/system.min.js"></script>
+    <script src="/lib/common-vendors.min.js"></script>
+    <!-- <script type="systemjs-importmap" src="/importmap.json"></script> -->
+
     <!-- <script src="https://cdn.bootcss.com/react/16.8.6/umd/react.development.js"></script> -->
     <!-- <script src="https://cdn.bootcss.com/react-dom/16.8.6/umd/react-dom.development.js"></script> -->
 
-    <script>
+    <!-- <script>
       System.import('https://cdn.bootcss.com/jquery/3.2.1/jquery.js').then(m =>
         console.log(m, 'dssd')
       );
+    </script> -->
+    <script>
+      System.import('/test.js').then(m => console.log(m, 'dssd'));
     </script>
-  <script type="text/javascript" src="bootstrap.js"></script><script type="text/javascript" src="test.js"></script><script type="text/javascript" src="vendors.js"></script></body>
+  </body>
 </html>

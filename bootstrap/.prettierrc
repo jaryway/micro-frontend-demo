@@ -3,5 +3,7 @@
   "singleQuote": true,
   "trailingComma": "es5",
   "jsxSingleQuote": true,
+
+  "proseWrap": "preserve",
   "quoteProps": "consistent"
 }

@@ -5,7 +5,7 @@ const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin')
 const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MergeIntoSingleFilePlugin = require('webpack-merge-and-include-globally');
+// const MergeIntoSingleFilePlugin = require('webpack-merge-and-include-globally');
 
 process.env.BABEL_ENV = 'production';
 process.env.NODE_ENV = 'production';
@@ -20,6 +20,7 @@ module.exports = {
   output: {
     publicPath: '',
     // filename: 'Bootstrap.[hash:5].js',
+    libraryTarget: 'amd',
     filename: '[name].js',
     path: path.resolve(__dirname, '..', 'build'),
   },
@@ -108,33 +109,14 @@ module.exports = {
   devtool: 'source-map',
   externals: [
     {
-      react: 'React',
-      // {
-      //   commonjs: 'react',
-      //   commonjs2: 'react',
-      //   amd: 'react',
-      //   root: 'React',
-      // },
-      'react-dom': 'ReactDOM',
-      // {
-      //   commonjs: 'react-dom',
-      //   commonjs2: 'react-dom',
-      //   amd: 'react-dom',
-      //   root: 'ReactDOM',
-      // },
-      'prop-types': 'PropTypes',
-
-      'react-router-dom': 'ReactRouterDOM',
-      //  {
-      //   commonjs: 'react-router-dom',
-      //   commonjs2: 'react-router-dom',
-      //   amd: 'react-router-dom',
-      //   root: 'ReactRouterDOM',
-      // },
-      redux: 'Redux',
-      'react-redux': 'ReactRedux',
-      history: 'History',
-      'single-spa': 'singleSpa',
+      react: 'react',
+      'react-dom': 'react-dom',
+      'react-router-dom': 'react-router-dom',
+      history: 'history',
+      'prop-types': 'prop-types',
+      redux: 'redux',
+      'react-redux': 'react-redux',
+      'single-spa': 'single-spa',
     },
   ],
 };

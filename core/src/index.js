@@ -1,8 +1,4 @@
 import * as singleSpa from 'single-spa';
-// import './lib/system';
-// import 'systemjs/dist/system';
-// import 'systemjs/dist/extras/amd'
-// import 'systemjs/dist/extras/use-default';
 // import './bootstrap';
 // import React from 'react';
 // import ReactDOM from 'react-dom';
@@ -35,17 +31,10 @@ async function bootstrap() {
     () => true // Our activity function
   );
 
-  let projectConfig = await SystemJS.import('/project.config.json').then(m => m.default);
+  let projectConfig = await SystemJS.import('/project.config.json').then(m => m.default || m);
   console.log('projectConfig', projectConfig);
 
   projectConfig.projects.forEach(element => {
-    // const entryPoints = element.main;
-    // console.log(
-    //   'projectConfig.projects.item',
-    //   element,
-    //   window.location.hash.startsWith(`#${element.prefix}`)
-    // );
-
     singleSpa.registerApplication(
       element.name,
       async () => {
