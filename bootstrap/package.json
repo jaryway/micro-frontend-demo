@@ -11,7 +11,8 @@
     "build:micro": "webpack -p --progress --config webpack.micro",
     "build:gulp": "gulp",
     "build:amd": "webpack --config config/webpack.amd",
-    "build:app": "webpack --config config/webpack.app"
+    "build:app": "webpack --config config/webpack.app",
+    "build:copy": "webpack --config config/webpack.copy"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +23,7 @@
     "babel-preset-react-app": "^9.0.1",
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
+    "gulp-copy": "^4.0.1",
     "gulp-rename": "^1.4.0",
     "gulp-uglify": "^3.0.2",
     "history": "^4.9.0",
