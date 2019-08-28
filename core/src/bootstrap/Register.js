@@ -1,10 +1,12 @@
 import '/';
 // import 'systemjs/dist/extras/amd';
 // import '../libs/es6-promise.auto.min'
-import '../lib/system';
+// import '../lib/system';
 import * as singleSpa from 'single-spa';
+import * as store from '../Store';
 import { GlobalEventDistributor } from './GlobalEventDistributor';
 const globalEventDistributor = new GlobalEventDistributor();
+const SystemJS = window.System;
 
 // hash 模式
 export function hashPrefix(app) {
@@ -48,7 +50,7 @@ export function pathPrefix(app) {
 export async function registerApp(params) {
   // 导入store模块
   let storeModule = {},
-    customProps = { globalEventDistributor: globalEventDistributor };
+    customProps = { store, globalEventDistributor: globalEventDistributor };
 
   // 尝试导入store
   try {
@@ -68,25 +70,51 @@ export async function registerApp(params) {
   }
 
   //准备自定义的props,传入每一个单独工程项目
-  customProps = { store: storeModule, globalEventDistributor: globalEventDistributor };
+  customProps = { store, globalEventDistributor };
 
-  window.System.import(params.main).then(m => {
-    console.log('module', m);
-    return m;
-  });
+  // window.System.import(params.main).then(m => {
+  //   console.log('module', m);
+  //   return m;
+  // });
 
-  console.log('pathPrefix(params)',pathPrefix(params)(window.location))
+  console.log('pathPrefix(params)', hashPrefix(params));
 
   singleSpa.registerApplication(
     params.name,
-    () =>
-      window.System.import(params.main).then(m => {
-        console.log('module', params.main);
-        return m;
-      }),
-    params.base ? () => true : hashPrefix(params),
-    customProps
+    async () => {
+      let component;
+
+      for (let i = 0; i < params.main.css.length; i++) {
+        await SystemJS.import(params.main.css[i])
+          .then(c => console.log(c))
+          .catch(er => console.log(er));
+      }
+
+      // 依次加载入口文件（runtime，main），返回最后一个
+      for (let i = 0; i < params.main.js.length; i++) {
+        component = await SystemJS.import(params.main.js[i])
+          .then(m => {
+            console.log('m', params.main.js[i], m);
+            return m;
+          })
+          .catch(er => console.log(er, params.main.js[i]));
+      }
+      console.log(component, 'component');
+      return component;
+    },
+    hashPrefix(params)
   );
+
+  // singleSpa.registerApplication(
+  //   params.name,
+  //   () =>
+  //     window.System.import(params.main).then(m => {
+  //       console.log('modulezzzzzzzzzzzzzzzzzz', params.main);
+  //       return m;
+  //     }),
+  //   params.base ? () => true : hashPrefix(params),
+  //   customProps
+  // );
 }
 
 function isArray(o) {

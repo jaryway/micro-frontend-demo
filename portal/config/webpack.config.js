@@ -170,7 +170,7 @@ module.exports = function(webpackEnv) {
       // TODO: remove this when upgrading to webpack 5
       futureEmitAssets: true,
       // "var" | "assign" | "this" | "window" | "self" | "global" | "commonjs" | "commonjs2" | "commonjs-module" | "amd" | "amd-require" | "umd" | "umd2" | "jsonp" | "system"
-      libraryTarget: 'amd',
+      libraryTarget: 'window',
       library: appPackageJson.name,
       // There are also additional JS chunk files if you use code splitting.
       chunkFilename: isEnvProduction
@@ -274,7 +274,7 @@ module.exports = function(webpackEnv) {
             name: 'async-commons',
             priority: 90,
           },
-          commons: {
+          'commons': {
             // 其余同步加载包
             // chunks: 'all',
             chunks: function(chunk) {
@@ -295,26 +295,26 @@ module.exports = function(webpackEnv) {
       },
     },
     externals: [
-      {
-        react: 'react',
-        'react-dom': 'react-dom',
-        'prop-types': 'prop-types',
-        'react-router-dom': 'react-router-dom',
-        redux: 'redux',
-        'react-redux': 'react-redux',
-        history: 'history',
-        'single-spa': 'single-spa',
-      },
       // {
-      //   react: 'React',
-      //   'react-dom': 'ReactDOM',
-      //   'prop-types': 'PropTypes',
-      //   'react-router-dom': 'ReactRouterDOM',
-      //   redux: 'Redux',
-      //   'react-redux': 'ReactRedux',
-      //   history: 'History',
-      //   'single-spa': 'singleSpa',
+      //   react: 'react',
+      //   'react-dom': 'react-dom',
+      //   'prop-types': 'prop-types',
+      //   'react-router-dom': 'react-router-dom',
+      //   redux: 'redux',
+      //   'react-redux': 'react-redux',
+      //   history: 'history',
+      //   'single-spa': 'single-spa',
       // },
+      {
+        'react': 'React',
+        'react-dom': 'ReactDOM',
+        'prop-types': 'PropTypes',
+        'react-router-dom': 'ReactRouterDOM',
+        'redux': 'Redux',
+        'react-redux': 'ReactRedux',
+        'history': 'History',
+        'single-spa': 'singleSpa',
+      },
     ],
     resolve: {
       // This allows you to set a fallback for where Webpack should look for modules.
