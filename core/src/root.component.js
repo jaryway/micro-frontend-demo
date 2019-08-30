@@ -24,36 +24,6 @@ export default class RootComponent extends React.Component {
     this.setState({ ...this.state, globalEventDistributor: globalEventDistributor });
   }
 
-  //   async componentWillMount() {
-  //     this.initMenu();
-  //     this.props.history.listen((location, action) => {
-  //       console.log('asdfasdfasdfasf', location, action);
-
-  //       if (action === 'PUSH') {
-  //         this.props.globalEventDistributor.dispatch({
-  //           type: 'to',
-  //           path: location.pathname,
-  //           owner: 'base',
-  //         });
-  //       }
-  //     });
-  //   }
-  //   initMenu() {
-  //     let store = this.state.globalEventDistributor.getState();
-  //     let menu = [];
-  //     Object.keys(store).forEach(name => {
-  //       if (store[name].menu) {
-  //         if (_.isArray(store[name].menu)) {
-  //           store[name].menu.forEach(item => {
-  //             pushStore(item);
-  //           });
-  //         } else {
-  //           pushStore(store[name].menu);
-  //         }
-  //       }
-  //     });
-  //   }
-
   render() {
     let conponent = <div></div>;
     //   const routerData = getRouterData()

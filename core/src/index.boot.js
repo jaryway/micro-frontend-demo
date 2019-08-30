@@ -21,13 +21,13 @@ if (process.env.NODE_ENV === 'development') {
 const reactLifecycles = singleSpaReact({
   React,
   ReactDOM,
-  rootComponent: spa => {
-    console.log('ssss', spa);
+  rootComponent: props => {
+    console.log('props', props);
     return (
       <RootComponent
-        history={spa.store.history}
-        store={spa.store.storeInstance}
-        globalEventDistributor={spa.globalEventDistributor}
+        history={props.store.history}
+        store={props.store.storeInstance}
+        globalEventDistributor={props.globalEventDistributor}
       />
     );
   },
