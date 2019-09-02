@@ -5,7 +5,7 @@
       "path": ["/portal"],
       "prefix": "/portal",
       "main": {
-        "js": ["/portal/runtime.js?v=0dcaadad", "/portal/static/js/main.1829ba14.chunk.js"],
+        "js": ["/portal/runtime.js?v=0dcaadad", "/portal/static/js/main.0efa1143.chunk.js"],
         "css": []
       }
     }

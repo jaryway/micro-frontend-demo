@@ -7,7 +7,7 @@ import { GlobalEventDistributor } from './GlobalEventDistributor';
 const globalEventDistributor = new GlobalEventDistributor();
 
 export default async function bootstrap() {
-  console.log('store',store);
+  console.log('bootstrap', store, globalEventDistributor);
   // 注册
   const customProps = { store, globalEventDistributor };
   // 注册

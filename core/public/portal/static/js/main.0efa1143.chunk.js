@@ -452,28 +452,11 @@ var root_component_RootComponent=/*#__PURE__*/function(_React$Component){_inheri
 //   );
 // }
 var reactLifecycles=single_spa_react_default()({React:external_React_default.a,ReactDOM:external_ReactDOM_default.a,rootComponent:function rootComponent(spa){return external_React_default.a.createElement(root_component,null);},// 可能会有加载顺序的问题
-domElementGetter:domElementGetter});function domElementGetter(){// let el = document.getElementById("sub-module-page");
-// if (!el) {
-//   el = document.createElement("div");
-//   el.id = "sub-module-page";
-// }
-// let timer = null;
-// timer = setInterval(() => {
-//   console.log(
-//     "setInterval",
-//     document.querySelector(".ant-layout-content #sub-module")
-//   );
-//   if (document.querySelector(".ant-layout-content #sub-module")) {
-//     document.querySelector(".ant-layout-content #sub-module").appendChild(el);
-//     clearInterval(timer);
-//   }
-// }, 100);
-// return el;
-return document.querySelector('.ant-layout-content #sub-module');return document.getElementById('root');}var bootstrap=[reactLifecycles.bootstrap];var mount=[reactLifecycles.mount];var unmount=[reactLifecycles.unmount];// If you want your app to work offline and load faster, you can change
+domElementGetter:domElementGetter});function domElementGetter(){var el=document.getElementById('sub-module-page');if(!el){el=document.createElement('div');el.id='sub-module-page';}var timer=1;var callback=function callback(){if(document.querySelector('.ant-layout-content #sub-module')){document.querySelector('.ant-layout-content #sub-module').appendChild(el);clearInterval(timer);timer=null;}};callback();timer&&(timer=setInterval(callback,0));return el;return document.querySelector('.ant-layout-content #sub-module');return document.getElementById('root');}var bootstrap=[reactLifecycles.bootstrap];var mount=[reactLifecycles.mount];var unmount=[reactLifecycles.unmount];// If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 unregister();
 
 /***/ })
 ],[[3,1]]]);
-//# sourceMappingURL=main.1829ba14.chunk.js.map
+//# sourceMappingURL=main.0efa1143.chunk.js.map

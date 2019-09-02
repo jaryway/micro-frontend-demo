@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "a66129fd413ac35473507d4c97942320",
+    "revision": "a3196c6dc4c721428109f609a0f0847a",
     "url": "/portal/index.html"
   },
   {
@@ -12,7 +12,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/portal/runtime.js?v=0dcaadad"
   },
   {
-    "revision": "ed343efa6c4895eba437",
-    "url": "/portal/static/js/main.1829ba14.chunk.js"
+    "revision": "fa2432522734f431f872",
+    "url": "/portal/static/js/main.0efa1143.chunk.js"
   }
 ]);

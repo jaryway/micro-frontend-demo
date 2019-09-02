@@ -8,9 +8,11 @@ export class GlobalEventDistributor {
   }
 
   dispatch(event) {
+    console.log('GlobalEventDistributor.dispatch', event);
     this.stores.forEach(s => {
+      
       s.dispatch(event);
-      setTimeout(() => s.dispatch({ type: "REFRESH" }));
+      setTimeout(() => s.dispatch({ type: 'REFRESH' }));
     });
   }
   getState() {

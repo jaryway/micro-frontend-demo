@@ -8,21 +8,21 @@ import { storeInstance, history } from './Store';
 
 if (process.env.NODE_ENV === 'development') {
   // 开发环境这样处理
-  ReactDOM.render(
-    <RootComponent
-      history={history}
-      store={storeInstance}
-      globalEventDistributor={storeInstance}
-    />,
-    document.getElementById('root')
-  );
+  // ReactDOM.render(
+  //   <RootComponent
+  //     history={history}
+  //     store={storeInstance}
+  //     globalEventDistributor={storeInstance}
+  //   />,
+  //   document.getElementById('root')
+  // );
 }
 
 const reactLifecycles = singleSpaReact({
   React,
   ReactDOM,
   rootComponent: props => {
-    console.log('props', props);
+    console.log('singleSpaReact', props);
     return (
       <RootComponent
         history={props.store.history}

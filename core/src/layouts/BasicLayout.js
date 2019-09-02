@@ -1,5 +1,5 @@
 import 'antd/dist/antd.css';
-import './App.css';
+import './BasicLayout.css';
 import React from 'react';
 import { Switch, Route, Link } from 'react-router-dom';
 import { Layout, Menu, Icon } from 'antd';
@@ -7,12 +7,12 @@ import Loadable from 'react-loadable';
 // import Home from './Home';
 const loading = noop => <div />;
 
-const HomeAsync = Loadable({ loading, loader: () => import('./Home') });
-const SubModuleAsync = Loadable({ loading, loader: () => import('./SubModule') });
+const HomeAsync = Loadable({ loading, loader: () => import('../pages/Home') });
+const SubModuleAsync = Loadable({ loading, loader: () => import('../pages/SubModule') });
 
 const { Header, Sider, Content } = Layout;
 
-class App extends React.Component {
+class BasicLayout extends React.Component {
   state = {
     collapsed: false,
   };
@@ -77,4 +77,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default BasicLayout;

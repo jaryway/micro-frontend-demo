@@ -29,27 +29,32 @@ const reactLifecycles = singleSpaReact({
 });
 
 function domElementGetter() {
-  // let el = document.getElementById("sub-module-page");
-  // if (!el) {
-  //   el = document.createElement("div");
-  //   el.id = "sub-module-page";
-  // }
-  // let timer = null;
-  // timer = setInterval(() => {
-  //   console.log(
-  //     "setInterval",
-  //     document.querySelector(".ant-layout-content #sub-module")
-  //   );
-  //   if (document.querySelector(".ant-layout-content #sub-module")) {
-  //     document.querySelector(".ant-layout-content #sub-module").appendChild(el);
-  //     clearInterval(timer);
-  //   }
-  // }, 100);
+  let el = document.getElementById('sub-module-page');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'sub-module-page';
+  }
 
-  // return el;
+  let timer = 1;
 
-  return document.querySelector('.ant-layout-content #sub-module');
-  return document.getElementById('root');
+  const callback = () => {
+    if (document.querySelector('.ant-layout-content #sub-module')) {
+      document.querySelector('.ant-layout-content #sub-module').appendChild(el);
+      clearInterval(timer);
+      timer = null;
+    }
+  };
+
+  // 进来先执行一次查找，如果找到直接mount，否则轮询一下
+
+  callback();
+
+  timer && (timer = setInterval(callback, 100));
+
+  return el;
+
+  // return document.querySelector('.ant-layout-content #sub-module');
+  // return document.getElementById('root');
 }
 
 export const bootstrap = [reactLifecycles.bootstrap];
