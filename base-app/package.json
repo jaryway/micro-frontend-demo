@@ -50,6 +50,7 @@
     "resolve-url-loader": "3.1.0",
     "sass-loader": "7.2.0",
     "semver": "6.3.0",
+    "single-spa-react": "^2.10.2",
     "style-loader": "1.0.0",
     "terser-webpack-plugin": "1.4.1",
     "ts-pnp": "1.1.4",
@@ -131,5 +132,8 @@
     "presets": [
       "react-app"
     ]
+  },
+  "devDependencies": {
+    "html-webpack-project-config-plugin": "^1.0.0"
   }
 }

@@ -75,13 +75,13 @@ export async function registerApp(params) {
     async () => {
       let component;
 
-      for (let i = 0; i < element.main.css.length; i++) {
-        await SystemJS.import(element.main.css[i]);
+      for (let i = 0; i < params.main.css.length; i++) {
+        await SystemJS.import(params.main.css[i]);
       }
 
       // 依次加载入口文件（runtime，main），返回最后一个
-      for (let i = 0; i < element.main.js.length; i++) {
-        component = await SystemJS.import(element.main.js[i])
+      for (let i = 0; i < params.main.js.length; i++) {
+        component = await SystemJS.import(params.main.js[i])
           .then(m => {
             console.log('element.main.js', i, m);
             return m;
@@ -91,7 +91,7 @@ export async function registerApp(params) {
       console.log(component, 'component');
       return component;
     },
-    params.base ? () => true : pathPrefix(params),
+    params.base || params.name === 'base' ? () => true : pathPrefix(params),
     customProps
   );
 }

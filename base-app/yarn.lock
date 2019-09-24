@@ -4453,6 +4453,11 @@ html-webpack-plugin@4.0.0-beta.5:
     tapable "^1.1.0"
     util.promisify "1.0.0"
 
+html-webpack-project-config-plugin@^1.0.0:
+  version "1.0.0"
+  resolved "http://192.10.169.216:4873/html-webpack-project-config-plugin/-/html-webpack-project-config-plugin-1.0.0.tgz#4eccd85fb08e9c94f47e4211dfe51afc89f0992a"
+  integrity sha1-TszYX7COnJT0fkIR3+Ua/InwmSo=
+
 htmlparser2@^3.3.0:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/htmlparser2/-/htmlparser2-3.10.1.tgz#bd679dc3f59897b6a34bb10749c855bb53a9392f"
@@ -8552,6 +8557,11 @@ simple-swizzle@^0.2.2:
   integrity sha1-pNprY1/8zMoz9w0Xy5JZLeleVXo=
   dependencies:
     is-arrayish "^0.3.1"
+
+single-spa-react@^2.10.2:
+  version "2.10.2"
+  resolved "http://192.10.169.216:4873/single-spa-react/-/single-spa-react-2.10.2.tgz#5033d454a9299170e5cc086b07f319862ee459c7"
+  integrity sha1-UDPUVKkpkXDlzAhrB/MZhi7kWcc=
 
 sisteransi@^1.0.3:
   version "1.0.3"

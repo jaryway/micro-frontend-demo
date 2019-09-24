@@ -110,7 +110,15 @@ module.exports = {
       // inlineSource: 'bootstrap.(js)$',
     }),
     // new HtmlWebpackInlineSourcePlugin(),
-    new CopyWebpackPlugin([{ from: path.resolve(__dirname, '..', 'public/project.config.json') }]),
+    new CopyWebpackPlugin([
+      { from: path.resolve(__dirname, '..', 'public/project.config.json') },
+      {
+        from: path.resolve(__dirname, '..', 'public/base-app/**/*'),
+        transformPath(targetPath) {
+          return targetPath.replace('public', '');
+        },
+      },
+    ]),
     // new CleanWebpackPlugin({ cleanOnceBeforeBuildPatterns: [ path.resolve(__dirname, '..', 'build')] }),
   ],
   devtool: 'source-map',
