@@ -1,8 +1,8 @@
 const path = require('path');
-const webpack = require('webpack');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
-const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
+// const webpack = require('webpack');
+// const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+// const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
+// const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 // const MergeIntoSingleFilePlugin = require('webpack-merge-and-include-globally');
@@ -14,7 +14,7 @@ module.exports = {
   mode: 'production',
   entry: {
     // bootstrap: './src/Bootstrap.js',
-    test: './src/test.js',
+    bootstrap: './src/index.js',
     // vendors: ['react', 'react-dom'],
   },
   output: {
@@ -22,43 +22,37 @@ module.exports = {
     // filename: 'Bootstrap.[hash:5].js',
     libraryTarget: 'amd',
     filename: '[name].js',
+    library: 'bootstrap',
     path: path.resolve(__dirname, '..', 'build'),
   },
   optimization: {
-    minimize: false,
+    minimize: true,
 
-    splitChunks: {
-      // chunks: "all",
-      // name: false
-      cacheGroups: {
-        // vendors: {
-        //   // 基本框架
-        //   chunks: 'all',
-        //   test: /(react|react-dom|react-router-dom|@babel\/polyfill|redux|react-redux|react-loadable)/,
-        //   priority: 100,
-        //   name: 'vendors',
-        // },
-        'async-commons': {
-          // 其余异步加载包
-          chunks: 'async',
-          minChunks: 2,
-          name: 'async-commons',
-          priority: 90,
-        },
-        commons: {
-          // 其余同步加载包
-          // chunks: 'all',
-          chunks: function(chunk) {
-            // console.log(chunk.name, '001010');
-            // 这里的name 可以参考在使用`webpack-ant-icon-loader`时指定的`chunkName`
-            return chunk.name !== 'antd-icons';
-          },
-          minChunks: 2,
-          name: 'commons',
-          priority: 80,
-        },
-      },
-    },
+    // splitChunks: {
+    //   // chunks: "all",
+    //   // name: false
+    //   cacheGroups: {
+    //     'async-commons': {
+    //       // 其余异步加载包
+    //       chunks: 'async',
+    //       minChunks: 2,
+    //       name: 'async-commons',
+    //       priority: 90,
+    //     },
+    //     'commons': {
+    //       // 其余同步加载包
+    //       // chunks: 'all',
+    //       chunks: function(chunk) {
+    //         // console.log(chunk.name, '001010');
+    //         // 这里的name 可以参考在使用`webpack-ant-icon-loader`时指定的`chunkName`
+    //         return chunk.name !== 'antd-icons';
+    //       },
+    //       minChunks: 2,
+    //       name: 'commons',
+    //       priority: 80,
+    //     },
+    //   },
+    // },
   },
   module: {
     rules: [
@@ -99,22 +93,35 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, '..', 'src/index.html'),
+      template: path.resolve(__dirname, '..', 'src/index.ejs'),
+      inject: false,
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true,
+      },
       // inlineSource: 'bootstrap.(js)$',
     }),
-    new HtmlWebpackInlineSourcePlugin(),
+    // new HtmlWebpackInlineSourcePlugin(),
     new CopyWebpackPlugin([{ from: path.resolve(__dirname, '..', 'public/project.config.json') }]),
     // new CleanWebpackPlugin({ cleanOnceBeforeBuildPatterns: [ path.resolve(__dirname, '..', 'build')] }),
   ],
   devtool: 'source-map',
   externals: [
     {
-      react: 'react',
+      'react': 'react',
       'react-dom': 'react-dom',
       'react-router-dom': 'react-router-dom',
-      history: 'history',
+      'history': 'history',
       'prop-types': 'prop-types',
-      redux: 'redux',
+      'redux': 'redux',
       'react-redux': 'react-redux',
       'single-spa': 'single-spa',
     },

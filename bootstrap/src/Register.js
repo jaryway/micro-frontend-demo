@@ -49,7 +49,7 @@ export async function registerApp(params) {
 
   // 尝试导入store
   try {
-    storeModule = params.store ? await window.System.import(params.store) : { storeInstance: null };
+    storeModule = params.store ? await SystemJS.import(params.store) : { storeInstance: null };
   } catch (e) {
     console.log(`Could not load store of app ${params.name}.`, e);
     //如果失败则不注册该模块
@@ -86,7 +86,7 @@ export async function registerApp(params) {
             console.log('element.main.js', i, m);
             return m;
           })
-          .catch(er => console.log(er));
+          .catch(ex => console.error(ex));
       }
       console.log(component, 'component');
       return component;

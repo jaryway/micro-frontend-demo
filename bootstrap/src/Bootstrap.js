@@ -4,9 +4,9 @@ import * as singleSpa from 'single-spa';
 import { registerApp } from './Register';
 
 async function bootstrap() {
-  let projectConfig = await window.System.import('/project.config.json').then(
+  await window.System.import('/project.config.json').then(
     resp => resp.default || resp
-  );
+  )
   console.log('projectConfig', projectConfig);
   projectConfig.projects.forEach(element => {
     registerApp({

@@ -1,23 +1,30 @@
-"use strict";
-// import '../libs/es6-promise.auto.min'
-import * as singleSpa from 'single-spa'; 
-import { registerApp } from './Register'
+'use strict';
+import * as singleSpa from 'single-spa';
+import { registerApp } from './Register';
+
+const SystemJS = window.System;
+
+//
 
 async function bootstrap() {
-    let projectConfig = await SystemJS.import('/project.config.json' )
-    projectConfig.projects.forEach( element => {
-        registerApp({
-            name: element.name,
-            main: element.main,
-            url: element.prefix,
-            store:element.store,
-            base: element.base,
-            path: element.path
-        });
-    });
+  console.log('singleSpa.start()1');
+  const projects = await SystemJS.import('/project.config.json')
+    .then(m => m.default || m)
+    .then(m => m.projects || []);
 
-    singleSpa.start();
+  projects.forEach(item => {
+    console.log('projects-item', item);
+    registerApp({
+      name: item.name,
+      main: item.main,
+      url: item.prefix,
+      store: item.store,
+      base: item.base,
+      path: item.path,
+    });
+  });
+  console.log('singleSpa.start()2');
+  singleSpa.start();
 }
 
-bootstrap()
-
+bootstrap();
