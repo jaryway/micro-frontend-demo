@@ -1,9 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 // 找到以 -app 结尾的文件夹
-
 // 提取里面的 project.json，并写入 project.config.json 中
-// console.log('__dirname', __dirname);
+
 const rootPath = path.join(__dirname, '..', 'public');
 fs.readdir(rootPath, function(err, files) {
   if (err) throw err;
@@ -12,7 +11,6 @@ fs.readdir(rootPath, function(err, files) {
   const appDirList = files
     .map(m => path.join(rootPath, m))
     .filter(m => {
-      // const absolutePath = path.join(rootPath, m);
       return fs.statSync(m).isDirectory();
     });
 
@@ -28,5 +26,4 @@ fs.readdir(rootPath, function(err, files) {
     if (err) throw err;
     console.log('The file has been saved!');
   });
-  // console.log('constentList', JSON.stringify(config));
 });
