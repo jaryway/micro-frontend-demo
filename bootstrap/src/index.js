@@ -4,10 +4,8 @@ import { registerApp } from './Register';
 
 const SystemJS = window.System;
 
-//
-
 async function bootstrap() {
-  console.log('singleSpa.start()1');
+  // console.log('singleSpa.start()1');
   const projects = await SystemJS.import('/project.config.json')
     .then(m => m.default || m)
     .then(m => m.projects || []);
@@ -23,7 +21,7 @@ async function bootstrap() {
       path: item.path,
     });
   });
-  console.log('singleSpa.start()2');
+  // console.log('singleSpa.start()2');
   singleSpa.start();
 }
 

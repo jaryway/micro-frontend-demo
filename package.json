@@ -1,0 +1,21 @@
+{
+  "name": "micro-frontend-demo",
+  "version": "1.0.0",
+  "description": "s",
+  "main": "index.js",
+  "scripts": {
+    "build": "",
+    "build:boot": "cd ./bootstrap && yarn build",
+    "build:base": "cd ./base-app && yarn build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jaryway/micro-frontend-demo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jaryway/micro-frontend-demo/issues"
+  },
+  "homepage": "https://github.com/jaryway/micro-frontend-demo#readme"
+}

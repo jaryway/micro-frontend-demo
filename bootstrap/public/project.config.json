@@ -1,5 +1,22 @@
 {
   "projects": [
-    {"name":"base","path":["/"],"prefix":"/","main":{"js":["/base-app/runtime-main.js","/base-app/static/js/main.7fa0f3ff.chunk.js"],"css":["/base-app/static/css/main.f05016c4.chunk.css"]}}
+    {
+      "name": "base",
+      "path": ["/"],
+      "prefix": "/",
+      "main": {
+        "js": ["/base-app/runtime-main.js", "/base-app/static/js/main.7fa0f3ff.chunk.js"],
+        "css": ["/base-app/static/css/main.f05016c4.chunk.css"]
+      }
+    },
+    {
+      "name": "base",
+      "path": ["/"],
+      "prefix": "/",
+      "main": {
+        "js": ["/base-app/runtime-main.js", "/base-app/static/js/main.7fa0f3ff.chunk.js"],
+        "css": ["/base-app/static/css/main.f05016c4.chunk.css"]
+      }
+    }
   ]
 }
