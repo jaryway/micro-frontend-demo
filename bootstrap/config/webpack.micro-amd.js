@@ -111,9 +111,9 @@ module.exports = {
     }),
     // new HtmlWebpackInlineSourcePlugin(),
     new CopyWebpackPlugin([
-      { from: path.resolve(__dirname, '..', 'public/project.config.json') },
+      // { from: path.resolve(__dirname, '..', 'public/project.config.json') },
       {
-        from: path.resolve(__dirname, '..', 'public/base-app/**/*'),
+        from: path.resolve(__dirname, '..', 'public/**/*'),
         transformPath(targetPath) {
           return targetPath.replace('public', '');
         },
