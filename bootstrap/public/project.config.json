@@ -1,1 +1,1 @@
-{"projects":[{"name":"base","path":["/"],"prefix":"/","main":{"js":["/base-app/runtime-main.js","/base-app/static/js/main.7fa0f3ff.chunk.js"],"css":["/base-app/static/css/main.f05016c4.chunk.css"]}}]}
+{"projects":[{"name":"base","path":["/"],"prefix":"/","store":"/base-app/store.js","main":{"js":["/base-app/static/js/2.9bc0cd33.chunk.js","/base-app/main.js"],"css":["/base-app/static/css/main.f05016c4.css"]}}]}

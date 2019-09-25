@@ -69,7 +69,7 @@ export async function registerApp(params) {
     store: storeModule,
     globalEventDistributor: globalEventDistributor,
   };
-
+  console.log('register', customProps);
   singleSpa.registerApplication(
     params.name,
     async () => {

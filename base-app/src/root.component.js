@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { Router, Switch } from 'react-router-dom';
 import Authorized from './utils/Authorized';
@@ -12,8 +12,22 @@ const { AuthorizedRoute } = Authorized;
 function RootComponent({ store, history, globalEventDistributor, ...rest }) {
   const [state, setState] = useState({ store, globalEventDistributor });
 
-  const customProps = { globalEventDistributor: state.globalEventDistributor };
+  useEffect(() => {
+    history.listen((location, action) => {
+      if (action === 'PUSH') {
+        globalEventDistributor.dispatch({
+          type: 'to',
+          path: location.pathname,
+          owner: 'base',
+        });
+        const globalState = store.getState();
+        console.log('history.listen', globalState);
+      }
+    });
+  }, []);
 
+  const customProps = { globalEventDistributor: state.globalEventDistributor };
+  console.log('454545', store.getState());
   return (
     <Provider store={state.store}>
       <Router history={history}>

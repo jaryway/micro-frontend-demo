@@ -34,10 +34,11 @@ const reactLifecycles = singleSpaReact({
   React,
   ReactDOM,
   rootComponent: props => {
+    console.log('singleSpaReact-rootComponent', props);
     return (
       <RootComponent
-        history={props.history}
-        store={props.store}
+        history={props.store.history}
+        store={props.store.storeInstance}
         globalEventDistributor={props.globalEventDistributor}
       />
     );
