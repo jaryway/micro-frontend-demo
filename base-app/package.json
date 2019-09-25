@@ -62,8 +62,9 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "build": "node scripts/build.js && yarn movefile",
+    "test": "node scripts/test.js",
+    "movefile": "rimraf ../bootstrap/public/base-app && copyfiles -u 1 ./build/**/*.*  ../bootstrap/public/base-app"
   },
   "eslintConfig": {
     "extends": "react-app"

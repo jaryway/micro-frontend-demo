@@ -4,8 +4,8 @@
   "description": "s",
   "main": "index.js",
   "scripts": {
-    "build": "",
-    "build:boot": "cd ./bootstrap && yarn build",
+    "build": "yarn build:base && yarn build:boot",
+    "build:boot": "cd ./bootstrap && yarn merge:conf && yarn build",
     "build:base": "cd ./base-app && yarn build"
   },
   "repository": {

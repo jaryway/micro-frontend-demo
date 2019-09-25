@@ -6,6 +6,7 @@
   "scripts": {
     "webpack": "webpack --config config/webpack.dev",
     "build": "rimraf build && gulp && webpack --config config/webpack.micro-amd",
+    "merge:conf":"node scripts/merge.js",
     "build:dll": "webpack --config config/webpack.config.dll",
     "build:lib": "webpack --config config/webpack.config.lib",
     "build:micro": "webpack -p --progress --config webpack.micro",
