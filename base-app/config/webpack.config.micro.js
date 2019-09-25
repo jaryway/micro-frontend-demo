@@ -183,7 +183,7 @@ module.exports = function(webpackEnv) {
       // Prevents conflicts when multiple Webpack runtimes (from different apps)
       // are used on the same page.
       jsonpFunction: `webpackJsonp${appPackageJson.name}`,
-      // libraryTarget: 'amd',
+      libraryTarget: 'amd',
       filename: '[name].js',
     },
     optimization: {
@@ -304,18 +304,18 @@ module.exports = function(webpackEnv) {
         PnpWebpackPlugin.moduleLoader(module),
       ],
     },
-    // externals: [
-    //   {
-    //     'react': 'react',
-    //     'react-dom': 'react-dom',
-    //     'react-router-dom': 'react-router-dom',
-    //     'history': 'history',
-    //     'prop-types': 'prop-types',
-    //     'redux': 'redux',
-    //     'react-redux': 'react-redux',
-    //     'single-spa': 'single-spa',
-    //   },
-    // ],
+    externals: [
+      {
+        'react': 'react',
+        'react-dom': 'react-dom',
+        'react-router-dom': 'react-router-dom',
+        'history': 'history',
+        'prop-types': 'prop-types',
+        'redux': 'redux',
+        'react-redux': 'react-redux',
+        'single-spa': 'single-spa',
+      },
+    ],
     module: {
       strictExportPresence: true,
       rules: [
