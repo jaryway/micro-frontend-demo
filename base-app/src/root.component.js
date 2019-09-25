@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import { Provider } from 'react-redux';
+import { Router, Switch } from 'react-router-dom';
+import Authorized from './utils/Authorized';
+import BasicLayout from './App';
+// import Store from './Store';
+// import logo from './logo.svg';
 import './App.css';
 
-function App() {
+const { AuthorizedRoute } = Authorized;
+
+function RootComponent({ store, history, globalEventDistributor, ...rest }) {
+  const [state, setState] = useState({ store, globalEventDistributor });
+
+  const customProps = { globalEventDistributor: state.globalEventDistributor };
+
   return (
-    <div className='App'>
-      <header className='App-header'>
-        <img src={logo} className='App-logo' alt='logo' />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className='App-link'
-          href='https://reactjs.org'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={state.store}>
+      <Router history={history}>
+        <Switch>
+          <AuthorizedRoute path='/' render={props => <BasicLayout {...customProps} {...props} />} />
+        </Switch>
+      </Router>
+    </Provider>
   );
 }
 
-export default App;
+export default RootComponent;

@@ -15,17 +15,33 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import singleSpaReact from 'single-spa-react';
 import RootComponent from './root.component';
+import { storeInstance, history } from './Store';
 
 if (process.env.NODE_ENV === 'development') {
   // 开发环境直接渲染
-  ReactDOM.render(<RootComponent />, document.getElementById('root'));
+  ReactDOM.render(
+    <RootComponent
+      history={history}
+      store={storeInstance}
+      globalEventDistributor={storeInstance}
+    />,
+    document.getElementById('root')
+  );
 }
 
 //创建生命周期实例
 const reactLifecycles = singleSpaReact({
   React,
   ReactDOM,
-  rootComponent: RootComponent,
+  rootComponent: props => {
+    return (
+      <RootComponent
+        history={props.history}
+        store={props.store}
+        globalEventDistributor={props.globalEventDistributor}
+      />
+    );
+  },
   domElementGetter: () => document.getElementById('root'),
 });
 
