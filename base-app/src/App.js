@@ -38,13 +38,13 @@ function App(props) {
           <Link to='/about'>About</Link>
         </li>
         <li>
-          <Link to='/sub-app1'>sub-app1</Link>
+          <Link to='/sub1-app'>sub-app1</Link>
         </li>
       </ul>
 
       <Route exact path='/' component={Home} />
       <Route path='/about' component={About} />
-      <Route path='/sub-app1' component={SubApp} />
+      <Route path='/sub1-app' component={SubApp} />
     </div>
   );
 }

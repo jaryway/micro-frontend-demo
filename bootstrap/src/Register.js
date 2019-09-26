@@ -69,7 +69,7 @@ export async function registerApp(params) {
     store: storeModule,
     globalEventDistributor: globalEventDistributor,
   };
-  console.log('register', customProps);
+  // console.log('register', customProps);
   singleSpa.registerApplication(
     params.name,
     async () => {
@@ -83,15 +83,15 @@ export async function registerApp(params) {
       for (let i = 0; i < params.main.js.length; i++) {
         component = await SystemJS.import(params.main.js[i])
           .then(m => {
-            console.log('element.main.js', i, m);
+            // console.log('element.main.js', i, m);
             return m;
           })
           .catch(ex => console.error(ex));
       }
-      console.log(component, 'component');
+      // console.log(component, 'component');
       return component;
     },
-    params.base || params.name === 'base' ? () => true : pathPrefix(params),
+    params.base || params.name === 'base' ? () => true : hashPrefix(params),
     customProps
   );
 }
