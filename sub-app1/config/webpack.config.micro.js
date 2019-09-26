@@ -128,7 +128,7 @@ module.exports = function(webpackEnv) {
   };
 
   return {
-    name: 'base-app',
+    name: 'sub1-app',
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
     // Stop compilation early in production
     bail: isEnvProduction,
@@ -187,7 +187,6 @@ module.exports = function(webpackEnv) {
       // are used on the same page.
       jsonpFunction: `webpackJsonp${appPackageJson.name}`,
       libraryTarget: 'amd',
-      filename: '[name].js',
     },
     optimization: {
       minimize: isEnvProduction,
@@ -261,9 +260,9 @@ module.exports = function(webpackEnv) {
         chunks: 'all',
         name: false,
       },
-      // Keep the runtime chunk separated to enable long term caching
-      // https://twitter.com/wSokra/status/969679223278505985
-      // https://github.com/facebook/create-react-app/issues/5358
+      // // Keep the runtime chunk separated to enable long term caching
+      // // https://twitter.com/wSokra/status/969679223278505985
+      // // https://github.com/facebook/create-react-app/issues/5358
       // runtimeChunk: {
       //   name: entrypoint => `runtime-${entrypoint.name}`,
       // },
@@ -307,18 +306,6 @@ module.exports = function(webpackEnv) {
         PnpWebpackPlugin.moduleLoader(module),
       ],
     },
-    externals: [
-      {
-        'react': 'react',
-        'react-dom': 'react-dom',
-        'react-router-dom': 'react-router-dom',
-        'history': 'history',
-        'prop-types': 'prop-types',
-        'redux': 'redux',
-        'react-redux': 'react-redux',
-        'single-spa': 'single-spa',
-      },
-    ],
     module: {
       strictExportPresence: true,
       rules: [
@@ -507,7 +494,6 @@ module.exports = function(webpackEnv) {
           {
             inject: true,
             template: paths.appHtml,
-            chunks: ['main'],
           },
           isEnvProduction
             ? {
@@ -636,9 +622,9 @@ module.exports = function(webpackEnv) {
       isEnvProduction &&
         new HtmlWebpackProjectConfigPlugin({
           config: {
-            name: 'base',
-            path: ['/'],
-            prefix: '/',
+            name: appPackageJson.name,
+            path: ['/sub1-app'],
+            prefix: '/sub1-app',
             store: `${publicPath}store.js`,
           },
           configFilename: 'project.json',
