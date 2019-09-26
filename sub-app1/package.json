@@ -66,7 +66,7 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "build:micro": "node scripts/build.js  --micro && yarn movefile",
+    "build:micro": "node scripts/build.js --micro && yarn movefile",
     "test": "node scripts/test.js",
     "movefile": "rimraf ../bootstrap/public/sub1-app && copyfiles -u 1 ./build/**/*.*  ../bootstrap/public/sub1-app"
   },

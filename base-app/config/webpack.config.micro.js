@@ -187,7 +187,6 @@ module.exports = function(webpackEnv) {
       // are used on the same page.
       jsonpFunction: `webpackJsonp${appPackageJson.name}`,
       libraryTarget: 'amd',
-      filename: '[name].js',
     },
     optimization: {
       minimize: isEnvProduction,
@@ -639,7 +638,7 @@ module.exports = function(webpackEnv) {
             name: 'base',
             path: ['/'],
             prefix: '/',
-            store: `${publicPath}store.js`,
+            store: `${publicPath}static/js/store.js`,
           },
           configFilename: 'project.json',
         }),

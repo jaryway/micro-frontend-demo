@@ -168,7 +168,7 @@ module.exports = function(webpackEnv) {
       // There will be one main bundle, and one file per asynchronous chunk.
       // In development, it does not produce real files.
       filename: isEnvProduction
-        ? 'static/js/[name].js?v=[contenthash:8]'
+        ? '[name].js?v=[contenthash:8]'
         : isEnvDevelopment && 'static/js/bundle.js',
       // TODO: remove this when upgrading to webpack 5
       futureEmitAssets: true,
@@ -306,6 +306,18 @@ module.exports = function(webpackEnv) {
         PnpWebpackPlugin.moduleLoader(module),
       ],
     },
+    externals: [
+      {
+        'react': 'react',
+        'react-dom': 'react-dom',
+        'react-router-dom': 'react-router-dom',
+        'history': 'history',
+        'prop-types': 'prop-types',
+        'redux': 'redux',
+        'react-redux': 'react-redux',
+        'single-spa': 'single-spa',
+      },
+    ],
     module: {
       strictExportPresence: true,
       rules: [
@@ -494,6 +506,7 @@ module.exports = function(webpackEnv) {
           {
             inject: true,
             template: paths.appHtml,
+            chunks: ['main'],
           },
           isEnvProduction
             ? {
@@ -513,12 +526,12 @@ module.exports = function(webpackEnv) {
             : undefined
         )
       ),
-      // Inlines the webpack runtime script. This script is too small to warrant
-      // a network request.
-      // https://github.com/facebook/create-react-app/issues/5358
-      isEnvProduction &&
-        shouldInlineRuntimeChunk &&
-        new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime-.+[.]js/]),
+      // // Inlines the webpack runtime script. This script is too small to warrant
+      // // a network request.
+      // // https://github.com/facebook/create-react-app/issues/5358
+      // isEnvProduction &&
+      //   shouldInlineRuntimeChunk &&
+      //   new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime-.+[.]js/]),
       // Makes some environment variables available in index.html.
       // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
       // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
