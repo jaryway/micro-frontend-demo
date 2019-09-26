@@ -1,7 +1,16 @@
+import './App.css';
 import React from 'react';
 import { Route, Link } from 'react-router-dom';
-import logo from './logo.svg';
-import './App.css';
+import { connect } from 'react-redux';
+import { Button } from 'antd';
+import Loadable from 'react-loadable';
+import injectReducer from './utils/injectReducer';
+// import About from './About';
+
+const About = Loadable({
+  loader: () => import('./About'),
+  loading: () => <div></div>,
+});
 
 function Home() {
   return (
@@ -11,13 +20,6 @@ function Home() {
   );
 }
 
-function About() {
-  return (
-    <div>
-      <h2>About</h2>
-    </div>
-  );
-}
 function SubApp() {
   return (
     <div id='subapp'>
@@ -26,8 +28,8 @@ function SubApp() {
   );
 }
 
-function App(props) {
-  console.log('props', props);
+function App({ name = '', updateUserName = () => {}, ...props }) {
+  // console.log('props', name);
   return (
     <div className=''>
       <ul>
@@ -41,6 +43,18 @@ function App(props) {
           <Link to='/sub1-app'>sub-app1</Link>
         </li>
       </ul>
+      <p>{name}</p>
+      <Button
+        onClick={() => {
+          updateUserName(
+            Math.random()
+              .toString(16)
+              .substring(2)
+          );
+        }}
+      >
+        ChangeName
+      </Button>
 
       <Route exact path='/' component={Home} />
       <Route path='/about' component={About} />
@@ -49,4 +63,30 @@ function App(props) {
   );
 }
 
-export default App;
+const withReducer = injectReducer({
+  key: 'app',
+  reducer: (state = { name: 'xiaoming' }, action) => {
+    const { type, payload } = action;
+    switch (type) {
+      case 'UPDATE_USER_NAME':
+        return { ...state, name: payload };
+      default:
+        return state;
+    }
+  },
+});
+const mapStateToProps = state => {
+  return state.app || {};
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    updateUserName: value => dispatch({ type: 'UPDATE_USER_NAME', payload: value }),
+  };
+};
+
+export default withReducer(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(App)
+);

@@ -27,9 +27,10 @@ function RootComponent({ store, history, globalEventDistributor, ...rest }) {
   }, []);
 
   const customProps = { globalEventDistributor: state.globalEventDistributor };
-  console.log('454545', store.getState());
+  // console.log('454545', store.getState());
   return (
     <Provider store={state.store}>
+      {/* <BasicLayout {...customProps} /> */}
       <Router history={history}>
         <Switch>
           <AuthorizedRoute path='/' render={props => <BasicLayout {...customProps} {...props} />} />
