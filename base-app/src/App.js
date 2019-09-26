@@ -18,35 +18,33 @@ function About() {
     </div>
   );
 }
+function SubApp() {
+  return (
+    <div id='subapp'>
+      <h2>SubApp</h2>
+    </div>
+  );
+}
 
 function App(props) {
   console.log('props', props);
   return (
-    <div className='App'>
-      <header className='App-header'>
-        <img src={logo} className='App-logo' alt='logo' />
-        <ul>
-          <li>
-            <Link to='/'>Home</Link>
-          </li>
-          <li>
-            <Link to='/about'>About</Link>
-          </li>
-          <li>
-            <Link to='/topics'>Topics</Link>
-          </li>
-        </ul>
-        {/* <a
-          className='App-link'
-          href='https://reactjs.org'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          Learn React
-        </a> */}
-        <Route exact path='/' component={Home} />
-        <Route path='/about' component={About} />
-      </header>
+    <div className=''>
+      <ul>
+        <li>
+          <Link to='/'>Home</Link>
+        </li>
+        <li>
+          <Link to='/about'>About</Link>
+        </li>
+        <li>
+          <Link to='/sub-app1'>sub-app1</Link>
+        </li>
+      </ul>
+
+      <Route exact path='/' component={Home} />
+      <Route path='/about' component={About} />
+      <Route path='/sub-app1' component={SubApp} />
     </div>
   );
 }
