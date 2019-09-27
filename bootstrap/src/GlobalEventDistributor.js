@@ -14,7 +14,7 @@ export class GlobalEventDistributor {
     });
   }
   getState() {
-    // 当通过 GlobalEventDistributor.getState() 返回整个站点的 state
+    // 通过 GlobalEventDistributor.getState() 返回整个站点的 state
     let state = {};
     this.stores.forEach(s => {
       let currentState = s.getState();

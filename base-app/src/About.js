@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 // import { Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button } from 'antd';
 import injectReducer from './utils/injectReducer';
-
-function About({ name = '', updateUserName = () => {}, addTodo, ...props }) {
+const refg = React.createRef();
+const About = forwardRef(({ name = '', updateUserName = () => {} }, ref) => {
   return (
-    <div className=''>
-      <p>{name}</p>
+    <div className='' ref={ref}>
+      <p>About {name}</p>
+      {/* <FancyButtonCom ref={refg}></FancyButtonCom> */}
       <Button
         onClick={() => {
           //   addTodo();
+          console.log('refg', refg);
           updateUserName(
             Math.random()
               .toString(16)
@@ -22,7 +24,7 @@ function About({ name = '', updateUserName = () => {}, addTodo, ...props }) {
       </Button>
     </div>
   );
-}
+});
 
 const withReducer = injectReducer({
   key: 'about',
@@ -50,9 +52,43 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default withReducer(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(About)
-);
+const Connect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+  null,
+  { forwardRef: true }
+)(About);
+
+const Next = forwardRef((props, ref) => {
+  return <Connect ref={ref} {...props}></Connect>;
+});
+
+export default withReducer(Next);
+
+
+
+
+
+
+// export default connect(
+//   mapStateToProps,
+//   mapDispatchToProps,
+//   null,
+//   { forwardRef: true }
+// )(About);
+
+// const FancyButton = React.forwardRef((props, ref) => (
+//   <button ref={ref} className='FancyButton'>
+//     {props.children}
+//   </button>
+// ));
+
+// You can now get a ref directly to the DOM button:
+
+// const FancyButtonCom = React.forwardRef((props, ref) => {
+//   return (
+//     <FancyButton {...props} ref={ref}>
+//       Click me!
+//     </FancyButton>
+//   );
+// });

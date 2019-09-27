@@ -1,16 +1,24 @@
 import './App.css';
-import React from 'react';
+import React, { forwardRef, Component } from 'react';
 import { Route, Link } from 'react-router-dom';
+// import React, { Component } from 'react';
+// import ReactDOM, { render } from 'react-dom';
+
 import { connect } from 'react-redux';
 import { Button } from 'antd';
 import Loadable from 'react-loadable';
+import { dynamic } from 'hsp-utils';
 import injectReducer from './utils/injectReducer';
-// import About from './About';
+import About from './About';
+// const About = forwardRef(ref => <IAbout ref={ref} />);
+const ref = React.createRef();
+// const About = Loadable({
+//   loader: () => import('./About'),
+//   loading: () => <div></div>,
+// });
 
-const About = Loadable({
-  loader: () => import('./About'),
-  loading: () => <div></div>,
-});
+// const About = dynamic(() => import('./About'));
+const User = dynamic(() => import('./User'));
 
 function Home() {
   return (
@@ -28,7 +36,7 @@ function SubApp() {
   );
 }
 
-function App({ name = '', updateUserName = () => {}, ...props }) {
+function App({ name = '', updateUserName = () => {} }) {
   // console.log('props', name);
   return (
     <div className=''>
@@ -40,12 +48,16 @@ function App({ name = '', updateUserName = () => {}, ...props }) {
           <Link to='/about'>About</Link>
         </li>
         <li>
+          <Link to='/user'>User</Link>
+        </li>
+        <li>
           <Link to='/sub1-app'>sub-app1</Link>
         </li>
       </ul>
       <p>{name}</p>
       <Button
         onClick={() => {
+          console.log('454545-render', ref);
           updateUserName(
             Math.random()
               .toString(16)
@@ -55,9 +67,16 @@ function App({ name = '', updateUserName = () => {}, ...props }) {
       >
         ChangeName
       </Button>
+      <Parent>sdfasdfasdfa</Parent>
 
       <Route exact path='/' component={Home} />
-      <Route path='/about' component={About} />
+      <Route path='/user' component={User} />
+      <Route
+        path='/about'
+        render={() => {
+          return <About forwardRef={ref} ref={ref}></About>;
+        }}
+      />
       <Route path='/sub1-app' component={SubApp} />
     </div>
   );
@@ -90,3 +109,41 @@ export default withReducer(
     mapDispatchToProps
   )(App)
 );
+
+const ref1 = React.createRef();
+
+function logProps(WrappedComponent) {
+  class LogProps extends React.Component {
+    render() {
+      const { forwardedRef, ...rest } = this.props;
+      return <WrappedComponent ref={forwardedRef} {...rest} />;
+    }
+  }
+
+  return React.forwardRef((props, ref) => {
+    return <LogProps forwardedRef={ref} {...props} />;
+  });
+}
+
+class Child extends Component {
+  constructor() {
+    super();
+  }
+  render() {
+    return <div>{this.props.txt}jsdhfdjsjsjsjsj </div>;
+  }
+}
+
+const LogChild = logProps(Child);
+
+class Parent extends Component {
+  constructor() {
+    super();
+  }
+  componentDidMount() {
+    console.log(ref1); //获取Child组件
+  }
+  render() {
+    return <LogChild ref={ref1} txt='parent props txt' />;
+  }
+}
