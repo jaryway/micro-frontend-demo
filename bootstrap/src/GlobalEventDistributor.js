@@ -10,14 +10,14 @@ export class GlobalEventDistributor {
   dispatch(event) {
     this.stores.forEach(s => {
       s.dispatch(event);
-      setTimeout(() => s.dispatch({ type: "REFRESH" }));
+      setTimeout(() => s.dispatch({ type: 'REFRESH' }));
     });
   }
   getState() {
+    // 当通过 GlobalEventDistributor.getState() 返回整个站点的 state
     let state = {};
     this.stores.forEach(s => {
       let currentState = s.getState();
-      console.log(currentState);
       state[currentState.namespace] = currentState;
     });
     return state;

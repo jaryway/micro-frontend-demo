@@ -1,7 +1,7 @@
 import { createStore, combineReducers } from 'redux';
 import { createHashHistory as createHistory } from 'history';
 // import createHistory from 'history/createHashHistory';
-const history = createHistory();
+export const history = createHistory();
 
 const initialState = {
   refresh: 0,
@@ -17,11 +17,12 @@ function render(state = initialState, action) {
 }
 
 function to(state = initialState, action) {
-  if (action.type !== 'to' && action.owner !== 'base') return { ...state, path: action.path };
+  if (action.type !== 'to' && action.owner !== 'sub1-app') return { ...state, path: action.path };
   history.replace(action.path);
 
   return { ...state, path: action.path };
 }
-
-export const storeInstance = createStore(combineReducers({ namespace: () => 'base', render, to }));
-export { history };
+const globalReducers = { namespace: () => 'sub1-app', render, to };
+export const storeInstance = createStore(combineReducers(globalReducers));
+storeInstance.globalReducers = globalReducers;
+// export { history };

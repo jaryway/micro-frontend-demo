@@ -12,13 +12,13 @@ import injectReducer from './utils/injectReducer';
 //   loading: () => <div></div>,
 // });
 
-// function Home() {
-//   return (
-//     <div>
-//       <h2>Home</h2>
-//     </div>
-//   );
-// }
+function Home() {
+  return (
+    <div>
+      <h2>Home</h2>
+    </div>
+  );
+}
 
 // function SubApp() {
 //   return (
@@ -33,6 +33,11 @@ function App({ name = '', updateUserName = () => {}, ...props }) {
   return (
     <div className=''>
       SUB-APP
+      <ul>
+        <li>
+          <Link to='/sub1-app/home'>Home</Link>
+        </li>
+      </ul>
       <p>{name}</p>
       <button
         onClick={() => {
@@ -45,6 +50,7 @@ function App({ name = '', updateUserName = () => {}, ...props }) {
       >
         ChangeName
       </button>
+      <Route path='/sub1-app/home' component={Home} />
     </div>
   );
 }

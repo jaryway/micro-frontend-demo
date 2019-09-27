@@ -3,8 +3,6 @@ import { Provider } from 'react-redux';
 import { Router, Switch } from 'react-router-dom';
 import Authorized from './utils/Authorized';
 import BasicLayout from './App';
-// import Store from './Store';
-// import logo from './logo.svg';
 import './App.css';
 
 const { AuthorizedRoute } = Authorized;
@@ -27,7 +25,7 @@ function RootComponent({ store, history, globalEventDistributor, ...rest }) {
   }, []);
 
   const customProps = { globalEventDistributor: state.globalEventDistributor };
-  // console.log('454545', store.getState());
+  console.log('sub1-app-store', globalEventDistributor.getState(), store.getState());
   return (
     <Provider store={state.store}>
       {/* <BasicLayout {...customProps} /> */}

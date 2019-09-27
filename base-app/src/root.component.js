@@ -27,7 +27,7 @@ function RootComponent({ store, history, globalEventDistributor, ...rest }) {
   }, []);
 
   const customProps = { globalEventDistributor: state.globalEventDistributor };
-  // console.log('454545', store.getState());
+  console.log('base-app-store', store.getState());
   return (
     <Provider store={state.store}>
       {/* <BasicLayout {...customProps} /> */}

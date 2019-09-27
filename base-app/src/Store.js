@@ -1,7 +1,7 @@
 import { createStore, combineReducers } from 'redux';
 import { createHashHistory as createHistory } from 'history';
 // import createHistory from 'history/createHashHistory';
-const history = createHistory();
+export const history = createHistory();
 
 const initialState = {
   refresh: 0,
@@ -23,5 +23,6 @@ function to(state = initialState, action) {
   return { ...state, path: action.path };
 }
 
-export const storeInstance = createStore(combineReducers({ namespace: () => 'base', render, to }));
-export { history };
+const globalReducers = { namespace: () => 'base', render, to };
+export const storeInstance = createStore(combineReducers(globalReducers));
+storeInstance.globalReducers = globalReducers;
