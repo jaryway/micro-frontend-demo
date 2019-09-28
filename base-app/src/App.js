@@ -1,21 +1,35 @@
 import './App.css';
 import React, { forwardRef, Component } from 'react';
 import { Route, Link } from 'react-router-dom';
-// import React, { Component } from 'react';
-// import ReactDOM, { render } from 'react-dom';
-
 import { connect } from 'react-redux';
 import { Button } from 'antd';
 import Loadable from 'react-loadable';
 import { dynamic } from 'hsp-utils';
 import injectReducer from './utils/injectReducer';
-import About from './About';
-// const About = forwardRef(ref => <IAbout ref={ref} />);
-const ref = React.createRef();
-// const About = Loadable({
-//   loader: () => import('./About'),
-//   loading: () => <div></div>,
-// });
+// import About from './About';
+// import Logger from './Logger';
+// const About = forwardRef((props, ref) => <About1 {...props} ref={ref} />);
+
+// const ref = React.createRef();
+const ref1 = React.createRef();
+const aboutRef = React.createRef();
+
+const About = Loadable({
+  // loader: () => import('./About'),
+  loader: async () => {
+    const { default: LoadableComponent } = await import('./About');
+    return ({ forwardRef, ...props }) => <LoadableComponent {...props} ref={forwardRef} />;
+  },
+
+  loading: () => <div></div>,
+  // render: (loaded, props) => {
+  //   let Component = loaded.default;
+
+  //   const Forwarded = forwardRef((rest, ref) => <Component {...rest} rf={ref} />);
+
+  //   return <Forwarded {...props} />;
+  // },
+});
 
 // const About = dynamic(() => import('./About'));
 const User = dynamic(() => import('./User'));
@@ -57,7 +71,7 @@ function App({ name = '', updateUserName = () => {} }) {
       <p>{name}</p>
       <Button
         onClick={() => {
-          console.log('454545-render', ref);
+          console.log('ChangeName-click', ref1, aboutRef);
           updateUserName(
             Math.random()
               .toString(16)
@@ -67,14 +81,14 @@ function App({ name = '', updateUserName = () => {} }) {
       >
         ChangeName
       </Button>
-      <Parent>sdfasdfasdfa</Parent>
+      {/* <Parent>sdfasdfasdfa</Parent> */}
 
       <Route exact path='/' component={Home} />
       <Route path='/user' component={User} />
       <Route
         path='/about'
         render={() => {
-          return <About forwardRef={ref} ref={ref}></About>;
+          return <About forwardRef={ref1} ref={aboutRef} name={'dddd'}></About>;
         }}
       />
       <Route path='/sub1-app' component={SubApp} />
@@ -103,6 +117,8 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
+// export default App;
+
 export default withReducer(
   connect(
     mapStateToProps,
@@ -110,40 +126,8 @@ export default withReducer(
   )(App)
 );
 
-const ref1 = React.createRef();
+// // const WithReducerComponent = withReducer({})(Connect);
 
-function logProps(WrappedComponent) {
-  class LogProps extends React.Component {
-    render() {
-      const { forwardedRef, ...rest } = this.props;
-      return <WrappedComponent ref={forwardedRef} {...rest} />;
-    }
-  }
-
-  return React.forwardRef((props, ref) => {
-    return <LogProps forwardedRef={ref} {...props} />;
-  });
-}
-
-class Child extends Component {
-  constructor() {
-    super();
-  }
-  render() {
-    return <div>{this.props.txt}jsdhfdjsjsjsjsj </div>;
-  }
-}
-
-const LogChild = logProps(Child);
-
-class Parent extends Component {
-  constructor() {
-    super();
-  }
-  componentDidMount() {
-    console.log(ref1); //获取Child组件
-  }
-  render() {
-    return <LogChild ref={ref1} txt='parent props txt' />;
-  }
-}
+// function Parent(props) {
+//   return <WithReducerComponent {...props} ref={ref1} txt='parent props txt' />;
+// }
