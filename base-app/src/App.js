@@ -2,7 +2,7 @@ import './App.css';
 import React, { forwardRef, Component } from 'react';
 import { Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button } from 'antd';
+import { Button, Switch } from 'antd';
 import Loadable from 'react-loadable';
 import { dynamic } from 'hsp-utils';
 import injectReducer from './utils/injectReducer';
@@ -82,16 +82,17 @@ function App({ name = '', updateUserName = () => {} }) {
         ChangeName
       </Button>
       {/* <Parent>sdfasdfasdfa</Parent> */}
-
-      <Route exact path='/' component={Home} />
-      <Route path='/user' component={User} />
-      <Route
-        path='/about'
-        render={() => {
-          return <About forwardRef={ref1} ref={aboutRef} name={'dddd'}></About>;
-        }}
-      />
-      <Route path='/sub1-app' component={SubApp} />
+      <Switch>
+        <Route exact path='/' component={Home} />
+        <Route path='/user' component={User} />
+        <Route
+          path='/about'
+          render={() => {
+            return <About forwardRef={ref1} ref={aboutRef} name={'dddd'}></About>;
+          }}
+        />
+        <Route path='/sub1-app' component={SubApp} />
+      </Switch>
     </div>
   );
 }

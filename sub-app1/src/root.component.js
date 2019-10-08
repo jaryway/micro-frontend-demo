@@ -11,6 +11,7 @@ function RootComponent({ store, history, globalEventDistributor, ...rest }) {
   const [state, setState] = useState({ store, globalEventDistributor });
 
   useEffect(() => {
+    console.log('history', history);
     history.listen((location, action) => {
       if (action === 'PUSH') {
         globalEventDistributor.dispatch({
