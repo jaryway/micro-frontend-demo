@@ -4,10 +4,11 @@
   "description": "s",
   "main": "index.js",
   "scripts": {
-    "build": "yarn build:base && yarn build:subapp && yarn build:boot",
+    "build": "yarn build:base && yarn build:subapp1 && yarn build:subapp2 && yarn build:boot",
     "build:boot": "cd ./bootstrap && yarn merge:conf && yarn build",
     "build:base": "cd ./base-app && yarn build:micro",
-    "build:subapp":"cd ./sub-app1 && yarn build:micro"
+    "build:subapp1":"cd ./sub1-app && yarn build:micro",
+    "build:subapp2":"cd ./sub2-app && yarn build:micro"
   },
   "repository": {
     "type": "git",
