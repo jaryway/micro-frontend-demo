@@ -65,10 +65,16 @@ function App({ name = '', updateUserName = () => {} }) {
           <Link to='/user'>User</Link>
         </li>
         <li>
-          <Link to='/sub1-app'>sub-app1</Link>
+          <Link to='/sub1-app'>sub1-app</Link>
         </li>
         <li>
-          <Link to='/sub1-app/home'>sub-app1/home</Link>
+          <Link to='/sub1-app/home'>sub1-app/home</Link>
+        </li>
+        <li>
+          <Link to='/sub2-app'>sub2-app</Link>
+        </li>
+        <li>
+          <Link to='/sub2-app/home'>sub2-app/home</Link>
         </li>
       </ul>
       <p>{name}</p>

@@ -129,7 +129,7 @@ module.exports = function(webpackEnv) {
   };
 
   return {
-    name: 'sub1-app',
+    name: 'sub2-app',
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
     // Stop compilation early in production
     bail: isEnvProduction,
