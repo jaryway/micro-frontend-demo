@@ -1,8 +1,8 @@
 import './App.css';
 import React, { forwardRef, Component } from 'react';
-import { Route, Link } from 'react-router-dom';
+import { Route, Link, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button, Switch } from 'antd';
+import { Button, Card } from 'antd';
 import Loadable from 'react-loadable';
 import { dynamic } from 'hsp-utils';
 import injectReducer from './utils/injectReducer';
@@ -53,7 +53,7 @@ function SubApp() {
 function App({ name = '', updateUserName = () => {} }) {
   // console.log('props', name);
   return (
-    <div className=''>
+    <Card bordered={false}>
       <ul>
         <li>
           <Link to='/'>Home</Link>
@@ -67,20 +67,27 @@ function App({ name = '', updateUserName = () => {} }) {
         <li>
           <Link to='/sub1-app'>sub-app1</Link>
         </li>
+        <li>
+          <Link to='/sub1-app/home'>sub-app1/home</Link>
+        </li>
       </ul>
       <p>{name}</p>
-      <Button
-        onClick={() => {
-          console.log('ChangeName-click', ref1, aboutRef);
-          updateUserName(
-            Math.random()
-              .toString(16)
-              .substring(2)
-          );
-        }}
-      >
-        ChangeName
-      </Button>
+      <div style={{ marginBottom: 8, paddingBottom: 8 }}>
+        <Button
+          type='primary'
+          onClick={() => {
+            console.log('base-app-click', ref1, aboutRef);
+            updateUserName(
+              Math.random()
+                .toString(16)
+                .substring(2)
+            );
+          }}
+        >
+          Click
+        </Button>
+      </div>
+
       {/* <Parent>sdfasdfasdfa</Parent> */}
       <Switch>
         <Route exact path='/' component={Home} />
@@ -93,7 +100,7 @@ function App({ name = '', updateUserName = () => {} }) {
         />
         <Route path='/sub1-app' component={SubApp} />
       </Switch>
-    </div>
+    </Card>
   );
 }
 

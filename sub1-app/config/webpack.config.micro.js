@@ -129,7 +129,7 @@ module.exports = function(webpackEnv) {
   };
 
   return {
-    name: 'base-app',
+    name: 'sub1-app',
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
     // Stop compilation early in production
     bail: isEnvProduction,
@@ -261,9 +261,9 @@ module.exports = function(webpackEnv) {
         chunks: 'all',
         name: false,
       },
-      // Keep the runtime chunk separated to enable long term caching
-      // https://twitter.com/wSokra/status/969679223278505985
-      // https://github.com/facebook/create-react-app/issues/5358
+      // // Keep the runtime chunk separated to enable long term caching
+      // // https://twitter.com/wSokra/status/969679223278505985
+      // // https://github.com/facebook/create-react-app/issues/5358
       // runtimeChunk: {
       //   name: entrypoint => `runtime-${entrypoint.name}`,
       // },
@@ -284,6 +284,8 @@ module.exports = function(webpackEnv) {
         .map(ext => `.${ext}`)
         .filter(ext => useTypeScript || !ext.includes('ts')),
       alias: {
+        '@': path.join(__dirname, '..', 'src'),
+        'api': path.join(__dirname, '..', 'src/api/index.fly'),
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
         'react-native': 'react-native-web',
@@ -527,12 +529,12 @@ module.exports = function(webpackEnv) {
             : undefined
         )
       ),
-      // Inlines the webpack runtime script. This script is too small to warrant
-      // a network request.
-      // https://github.com/facebook/create-react-app/issues/5358
-      isEnvProduction &&
-        shouldInlineRuntimeChunk &&
-        new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime-.+[.]js/]),
+      // // Inlines the webpack runtime script. This script is too small to warrant
+      // // a network request.
+      // // https://github.com/facebook/create-react-app/issues/5358
+      // isEnvProduction &&
+      //   shouldInlineRuntimeChunk &&
+      //   new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime-.+[.]js/]),
       // Makes some environment variables available in index.html.
       // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
       // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
@@ -636,9 +638,9 @@ module.exports = function(webpackEnv) {
       isEnvProduction &&
         new HtmlWebpackProjectConfigPlugin({
           config: {
-            name: 'base',
-            path: ['/'],
-            prefix: '/',
+            name: appPackageJson.name,
+            path: ['/sub1-app'],
+            prefix: '/sub1-app',
             store: `${publicPath}static/js/store.js`,
           },
           configFilename: 'project.json',

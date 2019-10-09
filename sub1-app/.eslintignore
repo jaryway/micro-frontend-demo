@@ -1,0 +1,4 @@
+build/*.js
+config/*.js
+**/orgchart.js
+scripts/*.js
