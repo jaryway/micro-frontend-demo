@@ -1,5 +1,5 @@
 {
-  "name": "sub1-app",
+  "name": "sub2-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,14 +7,14 @@
     "build": "node scripts/build.js",
     "build:micro": "node scripts/build.js --micro && yarn movefile",
     "test": "node scripts/test.js",
-    "movefile": "rimraf ../bootstrap/public/sub1-app && copyfiles -u 1 ./build/**/*.*  ../bootstrap/public/sub1-app"
+    "movefile": "rimraf ../bootstrap/public/sub2-app && copyfiles -u 1 ./build/**/*.*  ../bootstrap/public/sub2-app"
   },
   "dependencies": {
     "@babel/core": "7.6.0",
     "@svgr/webpack": "4.3.2",
     "@typescript-eslint/eslint-plugin": "^2.2.0",
     "@typescript-eslint/parser": "^2.2.0",
-    "antd": "^3.23.4",
+    "antd": "3.20.0",
     "babel-eslint": "10.0.3",
     "babel-jest": "^24.9.0",
     "babel-loader": "8.0.6",

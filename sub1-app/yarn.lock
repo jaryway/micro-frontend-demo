@@ -3874,7 +3874,7 @@ eslint-plugin-flowtype@3.13.0:
   dependencies:
     lodash "^4.17.15"
 
-eslint-plugin-import@2.18.2:
+eslint-plugin-import@^2.18.2:
   version "2.18.2"
   resolved "https://registry.npm.taobao.org/eslint-plugin-import/download/eslint-plugin-import-2.18.2.tgz#02f1180b90b077b33d447a17a2326ceb400aceb6"
   integrity sha1-AvEYC5Cwd7M9RHoXojJs60AKzrY=

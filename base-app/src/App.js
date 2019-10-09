@@ -99,6 +99,7 @@ function App({ name = '', updateUserName = () => {} }) {
           }}
         />
         <Route path='/sub1-app' component={SubApp} />
+        <Route path='/sub2-app' component={SubApp} />
       </Switch>
     </Card>
   );

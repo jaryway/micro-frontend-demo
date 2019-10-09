@@ -637,8 +637,8 @@ module.exports = function(webpackEnv) {
         new HtmlWebpackProjectConfigPlugin({
           config: {
             name: appPackageJson.name,
-            path: ['/sub1-app'],
-            prefix: '/sub1-app',
+            path: ['/sub2-app'],
+            prefix: '/sub2-app',
             store: `${publicPath}static/js/store.js`,
           },
           configFilename: 'project.json',
