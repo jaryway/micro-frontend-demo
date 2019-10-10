@@ -317,6 +317,8 @@ module.exports = function(webpackEnv) {
         'redux': 'redux',
         'react-redux': 'react-redux',
         'single-spa': 'single-spa',
+        'redux-promise-middleware': 'redux-promise-middleware',
+        'redux-thunk': 'redux-thunk',
       },
     ],
     module: {

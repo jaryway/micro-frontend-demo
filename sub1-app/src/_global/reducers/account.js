@@ -99,7 +99,7 @@ const reducers = handleActions(
           return {
             ...state,
             currentEmp: {},
-            currentEmpLoading: true
+            currentEmpLoading: false
           };
         }
       },

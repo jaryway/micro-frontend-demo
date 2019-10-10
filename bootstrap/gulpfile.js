@@ -51,6 +51,8 @@ const concatCommonVendors = isAMD => {
             './node_modules/history/umd/history.min.js',
             './node_modules/redux/dist/redux.min.js',
             './node_modules/react-redux/dist/react-redux.min.js',
+            './node_modules/redux-thunk/dist/redux-thunk.min.js',
+            './node_modules/redux-promise-middleware/dist/umd/redux-promise-middleware.min.js',
             './node_modules/single-spa/lib/umd/single-spa.min.js',
           ]
     )

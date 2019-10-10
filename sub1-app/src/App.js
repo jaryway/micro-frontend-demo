@@ -50,7 +50,7 @@ const columns = [
   },
 ];
 console.log('app', 45454545454545);
-function App({ globalEventDistributor, match, loading }) {
+function App({ globalEventDistributor, match, loading = false }) {
   useEffect(() => {
     globalEventDistributor.dispatch(actions.account.getCurrent());
   }, []);
@@ -121,6 +121,7 @@ const withReducer = injectReducer([
 
 export default withReducer(
   connect(state => {
+    console.log('sub1-app.state', state);
     return { loading: state.account.currentEmpLoading };
   })(App)
 );

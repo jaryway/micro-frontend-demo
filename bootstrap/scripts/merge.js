@@ -9,6 +9,7 @@ fs.readdir(rootPath, function(err, files) {
   // console.log('files', files);
 
   const appDirList = files
+    .filter(m => m.endsWith('-app'))
     .map(m => path.join(rootPath, m))
     .filter(m => {
       return fs.statSync(m).isDirectory();
