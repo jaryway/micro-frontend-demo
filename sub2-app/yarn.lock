@@ -4795,10 +4795,10 @@ hsla-regex@^1.0.0:
   resolved "https://registry.npm.taobao.org/hsla-regex/download/hsla-regex-1.0.0.tgz#c1ce7a3168c8c6614033a4b5f7877f3b225f9c38"
   integrity sha1-wc56MWjIxmFAM6S194d/OyJfnDg=
 
-hsp-utils@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.npm.taobao.org/hsp-utils/download/hsp-utils-1.2.0.tgz#8366053e1eaa2f3c53965bdefefce3c1e5155390"
-  integrity sha1-g2YFPh6qLzxTllve/vzjweUVU5A=
+hsp-utils@^1.1.6:
+  version "1.1.6"
+  resolved "https://registry.npm.taobao.org/hsp-utils/download/hsp-utils-1.1.6.tgz#60270fd3b84c4d9d997cde179cb211ab9a10c077"
+  integrity sha1-YCcP07hMTZ2ZfN4XnLIRq5oQwHc=
 
 html-comment-regex@^1.1.0:
   version "1.1.2"
