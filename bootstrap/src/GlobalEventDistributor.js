@@ -12,6 +12,7 @@ export class GlobalEventDistributor {
       s.dispatch(event);
       setTimeout(() => s.dispatch({ type: 'REFRESH' }));
     });
+    console.log('GlobalEventDistributor.dispatch', event);
   }
   getState() {
     // 通过 GlobalEventDistributor.getState() 返回整个站点的 state

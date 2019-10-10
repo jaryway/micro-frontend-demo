@@ -114,14 +114,14 @@ function App({ globalEventDistributor, match, loading }) {
   // );
 }
 
-// const withReducer = injectReducer([
-//   // { key: 'app', reducer: appReducers },
-//   { key: 'account', reducer: accountReducers },
-// ]);
+const withReducer = injectReducer([
+  // { key: 'app', reducer: appReducers },
+  { key: 'account', reducer: accountReducers },
+]);
 
-// export default withReducer(
-//   connect(state => {
-//     return { loading: state.account.currentEmpLoading };
-//   })(App)
-// );
-export default App;
+export default withReducer(
+  connect(state => {
+    return { loading: state.account.currentEmpLoading };
+  })(App)
+);
+// export default App;

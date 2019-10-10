@@ -11,11 +11,11 @@ const BasicLayout = dynamic(() => import(`./App`));
 const { AuthorizedRoute } = Authorized;
 
 function RootComponent({ store, history, globalEventDistributor }) {
-  const [state] = useState({ store, globalEventDistributor });
+  const [state] = useState({ store, globalEventDistributor, history });
 
   useEffect(() => {
-    console.log('history', history);
     history.listen((location, action) => {
+      console.log('sub1-app.history.listen', history);
       if (action === 'PUSH') {
         globalEventDistributor.dispatch({
           type: 'to',
@@ -29,7 +29,7 @@ function RootComponent({ store, history, globalEventDistributor }) {
   }, []);
 
   const customProps = { globalEventDistributor: state.globalEventDistributor };
-  console.log('sub1-app-store01');
+  // console.log('sub1-app-store010000');
   return (
     <Provider store={state.store}>
       <LocaleProvider locale={zhCN}>

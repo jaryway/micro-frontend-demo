@@ -6,6 +6,11 @@ import { Button, Card } from 'antd';
 import Loadable from 'react-loadable';
 import { dynamic } from 'hsp-utils';
 import injectReducer from './utils/injectReducer';
+
+import actions from '@/_global/actions';
+import appReducers from '@/_global/reducers/app';
+import accountReducers from '@/_global/reducers/account';
+
 // import About from './About';
 // import Logger from './Logger';
 // const About = forwardRef((props, ref) => <About1 {...props} ref={ref} />);
@@ -111,35 +116,51 @@ function App({ name = '', updateUserName = () => {} }) {
   );
 }
 
-const withReducer = injectReducer({
-  key: 'app',
-  reducer: (state = { name: 'xiaoming' }, action) => {
-    const { type, payload } = action;
-    switch (type) {
-      case 'UPDATE_USER_NAME':
-        return { ...state, name: payload };
-      default:
-        return state;
-    }
-  },
-});
-const mapStateToProps = state => {
-  return state.app || {};
-};
-const mapDispatchToProps = dispatch => {
-  return {
-    updateUserName: value => dispatch({ type: 'UPDATE_USER_NAME', payload: value }),
-  };
-};
+// const withReducer = injectReducer({
+//   key: 'app',
+//   reducer: (state = { name: 'xiaoming' }, action) => {
+//     const { type, payload } = action;
+//     switch (type) {
+//       case 'UPDATE_USER_NAME':
+//         return { ...state, name: payload };
+//       default:
+//         return state;
+//     }
+//   },
+// });
+// const mapStateToProps = state => {
+//   return state.app || {};
+// };
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     updateUserName: value => dispatch({ type: 'UPDATE_USER_NAME', payload: value }),
+//   };
+// };
 
-// export default App;
+// // export default App;
+
+// export default withReducer(
+//   connect(
+//     mapStateToProps,
+//     mapDispatchToProps
+//   )(App)
+// );
+
+const withReducer = injectReducer([
+  // { key: 'app', reducer: appReducers },
+  { key: 'account', reducer: accountReducers },
+]);
 
 export default withReducer(
   connect(
-    mapStateToProps,
-    mapDispatchToProps
+    state => ({
+      // currentEmp: state.app.currentEmp,
+      currentEmpLoading: state.account.currentEmpLoading,
+    }),
+    actions.account
   )(App)
 );
+
 
 // // const WithReducerComponent = withReducer({})(Connect);
 

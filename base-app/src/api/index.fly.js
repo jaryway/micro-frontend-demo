@@ -1,4 +1,4 @@
-/* eslint-disable compat/compat */
+/* eslint-disable */
 // import axios from "axios";
 // 基于 flyio.js 实现的 api
 import Fly from 'flyio/dist/npm/fly';
@@ -74,14 +74,14 @@ export default createApi();
  * @param {*} request fly request 对象
  */
 async function setToken2HeaderBeforeRequest(request) {
-  console.log("setToken2HeaderBeforeRequest-1", request);
+  // console.log("request", request);
 
   const { url } = request;
   request = clearUpRequestParams(request);
 
   // 如果是去获取 token 则直接跳过
   if (url.indexOf('/token') > 0) return request;
-console.log('setToken2HeaderBeforeRequest');
+
   // log(`发起请求：path:${request.url}，baseURL:${request.baseURL}`);
   const access_token = await getAccessTokenAsync();
 

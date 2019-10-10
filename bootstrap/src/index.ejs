@@ -21,14 +21,17 @@
       );
     </script> -->
     <script>
-      window.CONFIG={
-        API_BASE_URL:'',
-        IOFFICE_URL:'', // _yj
-        // LOGIN_PAGE:%__LOGIN_PAGE__%,
-        ANDROID_APP_URL:'http://120.79.129.67:7777/ssmpHelper_v1.0.1_legu.apk',
-        IOS_APP_URL:'https://apps.apple.com/cn/app/%E8%88%B9%E6%B5%B7%E5%8A%A9%E6%89%8B/id1473250852'
-      };
+
+    window.CONFIG={
+      API_BASE_URL:"http://192.10.169.212:31111",
+      IOFFICE_URL:"", // _yj
+      LOGIN_PAGE:"",
+      CUSTOM_ICON_NAMES:["eye-close","patient-feedback","complaint","doctor-file","ibook","my-profile","my-schedule","cus-service","plugin","upgrade","feedback","content-p","folder-2","text","content","leader","division","legalentity","group","excel","app","isv","more","more-h","flow","signature","hr","res-report","fill-form","notice","finish","folder-open-1","ques","tran-data","add","person-add","info-manage","bus-manage","email","fold","unfold","word","zip","send","import","pack-down","alarm","image","link-ext","quote","flower","select","checkbox","radio","text-input","textarea","replay","open-eye","closed-eye","tick","exit-fullscreen","full-screen","seal","shut-down","cancel","handing","location","inventory","meeting","custom-info-manage","news-notices","bbs","doc-manage","setting-1"],
+      ANDROID_APP_URL:'http://120.79.129.67:7777/ssmpHelper_v1.0.1_legu.apk',
+      IOS_APP_URL:'https://apps.apple.com/cn/app/%E8%88%B9%E6%B5%B7%E5%8A%A9%E6%89%8B/id1473250852'
+    };
     </script>
+
   <% htmlWebpackPlugin.files.js.forEach(function(item,i){%>
   <script><%= compilation.assets[item].source() %></script>
   <% }) %>

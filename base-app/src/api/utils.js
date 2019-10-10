@@ -18,9 +18,7 @@ function createApi() {
     if (auth) {
       const { username, password } = auth;
       const encode = window.btoa || Base64.encode;
-      newOptions.headers.Authorization = `Basic ${encode(
-        username + ":" + password
-      )}`;
+      newOptions.headers.Authorization = `Basic ${encode(username + ":" + password)}`;
     }
 
     return fly.request(url, null, { ...newOptions, body: data });
@@ -38,27 +36,17 @@ export const normalApi = createApi();
  * 获取 access_token
  */
 export async function getAccessTokenAsync() {
-  const {
-    loggedin,
-    expiresed,
-    access_token,
-    refresh_token
-  } = getTokenInfoFromLocalStorage();
+  const { loggedin, expiresed, access_token, refresh_token } = getTokenInfoFromLocalStorage();
 
   // 已登录，一切正常
   if (loggedin && !expiresed && access_token) return access_token;
 
   let accessToken = "";
 
-  // if (process.env.NODE_ENV === "development") {
-    console.log('getAccessTokenAsync')
-    accessToken = await getTokenFromUrl();
-  // }
-
   // 已经登录，access_token 已过期，去刷新 access_token
-  // if (loggedin && expiresed && refresh_token) {
-  //   accessToken = await refreshTokenAsync(refresh_token);
-  // }
+  if (loggedin && expiresed && refresh_token) {
+    accessToken = await refreshTokenAsync(refresh_token);
+  }
 
   return accessToken;
 }
@@ -150,7 +138,7 @@ function responseOkHandler(response) {
  */
 function responseErrorHandler(error) {
   const { message: errMessage, response } = error || {};
-  const { message: message1 } = (response && response.data) || {};
+  const { message: message1 } = response && response.data || {};
   console.log(error);
   // todo: 谈个提示，发生网络错误
   showMessage(message1 || errMessage || "网络错误");
@@ -182,52 +170,4 @@ async function refreshTokenAsync(refresh_token) {
   localStorage.setItem("token", JSON.stringify(token));
 
   return access_token;
-}
-
-/** helper Methods
- * --------------------------------------------------------*/
-/**
- * 从 url 中获取用户名和密码
- */
-function getUserNameAndPasswordFromUrl() {
-  if (window.location.search.length < 2)
-    return { username: "zcadmin", password: "123456" };
-
-  const query = window.location.search
-    .slice(1)
-    .split("&")
-    .map(m => m.split("="))
-    .reduce((prev, [key, value]) => ({ ...prev, [key]: value }), {});
-
-  return { username: query.un, password: query.pwd };
-}
-
-async function getTokenFromUrl() {
-  // console.log("getTokenFromUrl");
-  const data = Object.entries({
-    grant_type: "password",
-    ...getUserNameAndPasswordFromUrl()
-  })
-    .map(m => m.join("="))
-    .join("&");
-
-  return normalApi("/uaa/api/oauth/token", {
-    method: "post",
-    // 使用 application/x-www-form-urlencoded 提交数据
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    auth: {
-      username: "$2a$10$XOVs4Z1YtPKqKwQVywG9j.xLAqXYRQLGZMGMrZDNbtl6pUC0Weteq",
-      password: "$2a$10$XOVs4Z1YtPKqKwQVywG9j.xLAqXYRQLGZMGMrZDNbtl6pUC0Weteq"
-    },
-    data
-  })
-    .then(resp => {
-      // console.log(resp, "resp");
-      return resp.data.access_token;
-    })
-    .catch(err => {
-      console.log("err", err);
-      // resolve("");
-      return "";
-    });
 }
