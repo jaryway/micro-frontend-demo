@@ -51,7 +51,7 @@ export async function getAccessTokenAsync() {
   let accessToken = "";
 
   // if (process.env.NODE_ENV === "development") {
-    console.log('getAccessTokenAsync')
+    // console.log('getAccessTokenAsync')
     accessToken = await getTokenFromUrl();
   // }
 

@@ -81,7 +81,7 @@ async function setToken2HeaderBeforeRequest(request) {
 
   // 如果是去获取 token 则直接跳过
   if (url.indexOf('/token') > 0) return request;
-console.log('setToken2HeaderBeforeRequest');
+
   // log(`发起请求：path:${request.url}，baseURL:${request.baseURL}`);
   const access_token = await getAccessTokenAsync();
 

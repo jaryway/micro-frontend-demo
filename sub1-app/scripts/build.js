@@ -8,6 +8,7 @@ const argvs = process.argv.slice(2);
 const IS_MICRO = argvs.includes('--micro');
 process.env.MICRO = IS_MICRO;
 
+console.log(process.env.MICRO, 'process.env.MICRO', process.env.NODE_ENV);
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.

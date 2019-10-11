@@ -87,7 +87,7 @@ const reducers = handleActions(
         },
 
         FULFILLED: (state, action) => {
-          console.log("GET_CURRENT/FULFILLED", action);
+          console.log("sub1-app.GET_CURRENT/FULFILLED", action);
           return {
             ...state,
             currentEmp: action.payload.data,

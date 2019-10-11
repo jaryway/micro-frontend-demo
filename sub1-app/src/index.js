@@ -34,6 +34,7 @@ const reactLifecycles = singleSpaReact({
 });
 
 function domElementGetter() {
+  console.log('domElementGetter');
   let el = document.getElementById('sub-app-page');
   if (!el) {
     el = document.createElement('div');
@@ -62,7 +63,15 @@ function domElementGetter() {
 }
 
 export const bootstrap = [reactLifecycles.bootstrap];
-export const mount = [reactLifecycles.mount];
+// export const mount = [reactLifecycles.mount];
+export async function mount(props) {
+  const { globalEventDistributor } = props;
+  globalEventDistributor.getState();
+  console.log('mount', props);
+  // return new Promise(res)
+
+  return reactLifecycles.mount(props);
+}
 export const unmount = [reactLifecycles.unmount];
 
 // // If you want your app to work offline and load faster, you can change

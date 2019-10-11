@@ -49,14 +49,16 @@ const columns = [
     key: 'address',
   },
 ];
-console.log('app', 45454545454545);
+// console.log('app', 45454545454545);
 function App({ globalEventDistributor, match, loading = false }) {
   useEffect(() => {
-    globalEventDistributor.dispatch(actions.account.getCurrent());
+    
+    if (!process.env.MICRO) {
+      globalEventDistributor.dispatch(actions.account.getCurrent());
+    }
   }, []);
 
   if (loading) return <Spin size='large' />;
-  // return <div>4554545</div>;
 
   return (
     <Card bordered={false}>
@@ -119,10 +121,12 @@ const withReducer = injectReducer([
   { key: 'account', reducer: accountReducers },
 ]);
 
-export default withReducer(
-  connect(state => {
-    console.log('sub1-app.state', state);
-    return { loading: state.account.currentEmpLoading };
-  })(App)
-);
+const mapStateToProps = (state, ownProps) => {
+  const { globalEventDistributor } = ownProps;
+  const { base: baseState } = globalEventDistributor.getState();
+  console.log('mapStateToProps', baseState, process.env.MICRO, process.env.NODE_ENV);
+  return { loading: (baseState || state).account.currentEmpLoading };
+};
+
+export default withReducer(connect(mapStateToProps)(App));
 // export default App;

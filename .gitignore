@@ -10,6 +10,7 @@
 
 # production
 **/build
+bootstrap/public/*-app
 
 # misc
 .DS_Store
