@@ -8,7 +8,7 @@ export default ({ match }) => {
       <Route
         path={`${match.path}/list/:type?`}
         render={props => {
-          console.log('employeeIndex');
+          // console.log('employeeIndex');
           return <div>User</div>;
         }}
         // component={EmployeeListAsync}

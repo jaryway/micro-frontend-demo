@@ -34,7 +34,7 @@ const reactLifecycles = singleSpaReact({
 });
 
 function domElementGetter() {
-  console.log('domElementGetter');
+  console.log('sub1-app.domElementGetter');
   let el = document.getElementById('sub-app-page');
   if (!el) {
     el = document.createElement('div');
@@ -66,11 +66,31 @@ export const bootstrap = [reactLifecycles.bootstrap];
 // export const mount = [reactLifecycles.mount];
 export async function mount(props) {
   const { globalEventDistributor } = props;
-  globalEventDistributor.getState();
-  console.log('mount', props);
-  // return new Promise(res)
+  const { base: baseState } = globalEventDistributor.getState();
+  const { account } = baseState;
+  console.log('sub1-app.mount', baseState);
+  /* Note：
+   * 这里要确保 mount 的时候 account 信息已经加载好
+   */
 
-  return reactLifecycles.mount(props);
+  // 如果 base 的用户信息已经加载好，直接 mount app；
+  // 否则 dispatch 一下，会在 currentEmp 加载好后执行mount
+  const baseAppIsOk = account && account.currentEmpLoading === false;
+
+  if (baseAppIsOk) return reactLifecycles.mount(props);
+
+  return new Promise(resolve => {
+    console.log('sub1-app.mount1', baseState);
+    globalEventDistributor.dispatch({
+      type: 'WILL_MOUNT',
+      payload: {
+        mount: () => {
+          console.log('sub1-app.mount2', baseState);
+          resolve(reactLifecycles.mount(props));
+        },
+      },
+    });
+  });
 }
 export const unmount = [reactLifecycles.unmount];
 

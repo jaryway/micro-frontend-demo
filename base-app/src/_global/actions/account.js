@@ -23,7 +23,15 @@ export default {
     history => history,
   ],
   // 获取当前用户
-  GET_CURRENT: () => api('/his-omp/api/employee/currentEmp').then(resp => resp.data),
+  // GET_CURRENT: () => api('/his-omp/api/employee/currentEmp').then(resp => resp.data),
+  GET_CURRENT: () => {
+    console.log('base-app.GET_CURRENT');
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve({ data: { name: 'xiaoming' } });
+      }, 1200);
+    });
+  },
   // 修改个人信息
   UPDATE_PROFILE: data =>
     api('/his-omp/api/employee/myself_update', { method: 'POST', data }).then(resp => data),

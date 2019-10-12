@@ -49,13 +49,10 @@ const columns = [
     key: 'address',
   },
 ];
-// console.log('app', 45454545454545);
-function App({ globalEventDistributor, match, loading = false }) {
+
+function App({ getCurrent, loading = false }) {
   useEffect(() => {
-    
-    if (!process.env.MICRO) {
-      globalEventDistributor.dispatch(actions.account.getCurrent());
-    }
+    getCurrent();
   }, []);
 
   if (loading) return <Spin size='large' />;
@@ -70,16 +67,7 @@ function App({ globalEventDistributor, match, loading = false }) {
       </ul>
       <p>{name}</p>
       <div style={{ marginBottom: 8, paddingBottom: 8 }}>
-        <Button
-          type='primary'
-          onClick={() => {
-            // updateUserName(
-            //   Math.random()
-            //     .toString(16)
-            //     .substring(2)
-            // );
-          }}
-        >
+        <Button type='primary' onClick={() => {}}>
           Click
         </Button>
       </div>
@@ -87,33 +75,6 @@ function App({ globalEventDistributor, match, loading = false }) {
       <Route path='/sub1-app/home' component={Home} />
     </Card>
   );
-
-  // return (
-  //   <Switch>
-  //     <Route path={`${match.path}/monthly`} exact={false} component={Monthly} />
-  //     <Route
-  //       path={`${match.path}/projectaudit`}
-  //       exact={false}
-  //       component={ProjectAudit}
-  //     />
-  //     <Route
-  //       path={`${match.path}/productcontrol`}
-  //       exact={false}
-  //       component={ProductControl}
-  //     />
-  //     <Route
-  //       path={`${match.path}/ssmpsystem`}
-  //       exact={false}
-  //       component={SsmpSystemAsync}
-  //     />
-  //     <Route
-  //       path={`${match.path}/managecontrol`}
-  //       exact={false}
-  //       component={ManageControlAsync}
-  //     />
-  //     <Redirect from={match.url} to={`${match.path}/monthly`} />
-  //   </Switch>
-  // );
 }
 
 const withReducer = injectReducer([
@@ -121,12 +82,26 @@ const withReducer = injectReducer([
   { key: 'account', reducer: accountReducers },
 ]);
 
-const mapStateToProps = (state, ownProps) => {
-  const { globalEventDistributor } = ownProps;
+const mapStateToProps = state => {
+  return { loading: state.account.currentEmpLoading };
+};
+const mapDispatchToProps = (dispatch, { globalEventDistributor }) => {
   const { base: baseState } = globalEventDistributor.getState();
-  console.log('mapStateToProps', baseState, process.env.MICRO, process.env.NODE_ENV);
-  return { loading: (baseState || state).account.currentEmpLoading };
+  console.log('sub1-app.mapDispatchToProps', baseState);
+  return {
+    getCurrent: () => {
+      // 如果是微前端模式，则直接将 base 中加载好的信息，同步到当前应用中
+      // 否则，发起 http 请求 account 信息
+      return dispatch(
+        actions.account.getCurrent(process.env.MICRO ? baseState.account.currentEmp : undefined)
+      );
+    },
+  };
 };
 
-export default withReducer(connect(mapStateToProps)(App));
-// export default App;
+export default withReducer(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(App)
+);

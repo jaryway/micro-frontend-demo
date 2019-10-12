@@ -34,7 +34,7 @@ const reactLifecycles = singleSpaReact({
   React,
   ReactDOM,
   rootComponent: props => {
-    console.log('singleSpaReact-rootComponent', props);
+    // console.log('singleSpaReact-rootComponent', props);
     return (
       <RootComponent
         history={props.store.history}
@@ -49,6 +49,9 @@ const reactLifecycles = singleSpaReact({
 // 项目启动的钩子
 export const bootstrap = [reactLifecycles.bootstrap];
 // 项目启动后的钩子
-export const mount = [reactLifecycles.mount];
+export const mount = function(props) {
+  console.log('base-app.mount');
+  return reactLifecycles.mount(props);
+};
 // 项目卸载的钩子
 export const unmount = [reactLifecycles.unmount];

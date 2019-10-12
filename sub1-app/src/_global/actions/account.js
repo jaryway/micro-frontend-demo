@@ -24,10 +24,12 @@ export default {
   ],
   // 获取当前用户
   // GET_CURRENT: () => api('/his-omp/api/employee/currentEmp').then(resp => resp.data),
-  GET_CURRENT: () => {
+  GET_CURRENT: data => {
+    // data =
+    if (data) return Promise.resolve({ data });
     return new Promise(resolve => {
       setTimeout(() => {
-        resolve({ data: {} });
+        resolve({ data: { name: 'xiaoming' } });
       }, 1000);
     });
   },

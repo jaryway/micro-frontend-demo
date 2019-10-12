@@ -1,43 +1,60 @@
 import './App.css';
-import React, { forwardRef, Component } from 'react';
-import { Route, Link, Switch } from 'react-router-dom';
+import React, { useState, useCallback, useEffect } from 'react';
+import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button, Card } from 'antd';
-import Loadable from 'react-loadable';
-import { dynamic } from 'hsp-utils';
-import injectReducer from './utils/injectReducer';
+import { Layout, Menu, Icon, Spin, message } from 'antd';
+import { dynamic, injectReducer } from 'hsp-utils';
 
 import actions from '@/_global/actions';
-import appReducers from '@/_global/reducers/app';
-import accountReducers from '@/_global/reducers/account';
+import accountReducer from '@/_global/reducers/account';
 
-// import About from './About';
-// import Logger from './Logger';
-// const About = forwardRef((props, ref) => <About1 {...props} ref={ref} />);
-
-// const ref = React.createRef();
-const ref1 = React.createRef();
-const aboutRef = React.createRef();
-
-const About = Loadable({
-  // loader: () => import('./About'),
-  loader: async () => {
-    const { default: LoadableComponent } = await import('./About');
-    return ({ forwardRef, ...props }) => <LoadableComponent {...props} ref={forwardRef} />;
+const { Header, Sider, Content } = Layout;
+const menuList = [
+  { key: 'k1', icon: 'home', title: 'Home', link: '/' },
+  { key: 'k2', icon: 'user', title: 'User', link: '/user' },
+  { key: 'k3', icon: 'message', title: 'About', link: '/about' },
+  {
+    key: 'k4',
+    icon: 'appstore',
+    title: 'Sub1App',
+    link: '/sub1-app',
+    children: [{ key: 'k3-0', title: '/Sub1App/Home', link: '/sub1-app/home' }],
   },
+  { key: 'k5', icon: 'shop', title: 'Sub2App', link: '/sub2-app' },
+];
 
-  loading: () => <div></div>,
-  // render: (loaded, props) => {
-  //   let Component = loaded.default;
+const { SubMenu } = Menu;
 
-  //   const Forwarded = forwardRef((rest, ref) => <Component {...rest} rf={ref} />);
+function renderMenu(menus) {
+  return menus.map(item => {
+    const { key, icon, title, link, children } = item;
+    if (children && children.length) {
+      return (
+        <SubMenu
+          key={key}
+          title={
+            <span>
+              <Icon type='mail' />
+              <span>{title}</span>
+            </span>
+          }
+        >
+          {renderMenu(children)}
+        </SubMenu>
+      );
+    }
 
-  //   return <Forwarded {...props} />;
-  // },
-});
+    return (
+      <Menu.Item key={key} link={link}>
+        {icon && <Icon type={icon} />}
+        <span> {title} </span>
+      </Menu.Item>
+    );
+  });
+}
 
-// const About = dynamic(() => import('./About'));
 const User = dynamic(() => import('./User'));
+const About = dynamic(() => import('./About'));
 
 function Home() {
   return (
@@ -55,115 +72,87 @@ function SubApp() {
   );
 }
 
-function App({ name = '', updateUserName = () => {} }) {
-  // console.log('props', name);
+function App({ history, globalEventDistributor, getCurrent, loading, ...rest }) {
+  const [collapsed, setCollapsed] = useState(false);
+  // console.log('rest', rest);
+  useEffect(() => {
+    getCurrent().then(() => {
+      globalEventDistributor.dispatch({ type: 'DID_MOUNT' });
+    });
+  }, []);
+
+  const toggle = useCallback(() => {
+    setCollapsed(!collapsed);
+  }, [collapsed]);
+
+  const onMenuClick = useCallback(link => {
+    history.push(link);
+  }, []);
+
+  if (loading)
+    return (
+      <div style={{ margin: '60px auto', textAlign: 'center' }}>
+        <Spin size='large' />
+      </div>
+    );
+
   return (
-    <Card bordered={false}>
-      <ul>
-        <li>
-          <Link to='/'>Home</Link>
-        </li>
-        <li>
-          <Link to='/about'>About</Link>
-        </li>
-        <li>
-          <Link to='/user'>User</Link>
-        </li>
-        <li>
-          <Link to='/sub1-app'>sub1-app</Link>
-        </li>
-        <li>
-          <Link to='/sub1-app/home'>sub1-app/home</Link>
-        </li>
-        <li>
-          <Link to='/sub2-app'>sub2-app</Link>
-        </li>
-        <li>
-          <Link to='/sub2-app/home'>sub2-app/home</Link>
-        </li>
-      </ul>
-      <p>{name}</p>
-      <div style={{ marginBottom: 8, paddingBottom: 8 }}>
-        <Button
-          type='primary'
-          onClick={() => {
-            console.log('base-app-click', ref1, aboutRef);
-            updateUserName(
-              Math.random()
-                .toString(16)
-                .substring(2)
-            );
+    <Layout id='components-layout-demo-custom-trigger'>
+      <Sider trigger={null} collapsible collapsed={collapsed} theme='light'>
+        <div className='logo' />
+        <Menu
+          theme='light'
+          mode='inline'
+          defaultSelectedKeys={['k1']}
+          onClick={({ item }) => {
+            onMenuClick(item.props['link']);
           }}
         >
-          Click
-        </Button>
-      </div>
-
-      {/* <Parent>sdfasdfasdfa</Parent> */}
-      <Switch>
-        <Route exact path='/' component={Home} />
-        <Route path='/user' component={User} />
-        <Route
-          path='/about'
-          render={() => {
-            return <About forwardRef={ref1} ref={aboutRef} name={'dddd'}></About>;
+          {renderMenu(menuList)}
+        </Menu>
+      </Sider>
+      <Layout>
+        <Header style={{ background: '#fff', padding: 0 }}>
+          <Icon
+            className='trigger'
+            type={collapsed ? 'menu-unfold' : 'menu-fold'}
+            onClick={toggle}
+          />
+        </Header>
+        <Content
+          style={{
+            margin: '24px 16px',
+            padding: 24,
+            background: '#fff',
+            minHeight: 'calc(100vh - 112px)',
           }}
-        />
-        <Route path='/sub1-app' component={SubApp} />
-        <Route path='/sub2-app' component={SubApp} />
-      </Switch>
-    </Card>
+        >
+          <Switch>
+            <Route exact path='/' component={Home} />
+            <Route path='/user' component={User} />
+            <Route path='/about' component={About} />
+            <Route path='/*-app' component={SubApp} />
+          </Switch>
+        </Content>
+      </Layout>
+    </Layout>
   );
 }
 
-// const withReducer = injectReducer({
-//   key: 'app',
-//   reducer: (state = { name: 'xiaoming' }, action) => {
-//     const { type, payload } = action;
-//     switch (type) {
-//       case 'UPDATE_USER_NAME':
-//         return { ...state, name: payload };
-//       default:
-//         return state;
-//     }
-//   },
-// });
-// const mapStateToProps = state => {
-//   return state.app || {};
+const withReducer = injectReducer([{ key: 'account', reducer: accountReducer }]);
+const mapStateToProps = state => {
+  console.log('base-app.state', state);
+  return { loading: state.account.currentEmpLoading };
+};
+const mapDispatchToProps = { getCurrent: actions.account.getCurrent };
+// (_dispatch, { globalEventDistributor }) => {
+//   return { getCurrent: () => globalEventDistributor.dispatch(actions.account.getCurrent()) };
 // };
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     updateUserName: value => dispatch({ type: 'UPDATE_USER_NAME', payload: value }),
-//   };
-// };
-
-// // export default App;
-
-// export default withReducer(
-//   connect(
-//     mapStateToProps,
-//     mapDispatchToProps
-//   )(App)
-// );
-
-const withReducer = injectReducer([
-  // { key: 'app', reducer: appReducers },
-  { key: 'account', reducer: accountReducers },
-]);
 
 export default withReducer(
   connect(
-    state => ({
-      // currentEmp: state.app.currentEmp,
-      currentEmpLoading: state.account.currentEmpLoading,
-    }),
-    actions.account
+    mapStateToProps,
+    // actions.account
+    mapDispatchToProps
   )(App)
 );
-
-
-// // const WithReducerComponent = withReducer({})(Connect);
-
-// function Parent(props) {
-//   return <WithReducerComponent {...props} ref={ref1} txt='parent props txt' />;
-// }

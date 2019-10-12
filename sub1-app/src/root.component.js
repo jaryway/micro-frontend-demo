@@ -14,8 +14,7 @@ function RootComponent({ store, history, globalEventDistributor }) {
   const [state] = useState({ store, globalEventDistributor, history });
 
   useEffect(() => {
-    console.log('sub1-app.history.useEffect');
-
+    // console.log('sub1-app.history.useEffect');
     const unlisten = state.history.listen((location, action) => {
       console.log('sub1-app.history.listen', history);
       if (action === 'PUSH') {
@@ -24,8 +23,8 @@ function RootComponent({ store, history, globalEventDistributor }) {
           path: location.pathname,
           owner: 'sub1-app',
         });
-        const globalState = store.getState();
-        console.log('history.listen-sub1-app ', globalState);
+        // const globalState = store.getState();
+        // console.log('history.listen-sub1-app ', globalState);
       }
     });
     return () => {
@@ -35,7 +34,7 @@ function RootComponent({ store, history, globalEventDistributor }) {
   }, []);
 
   const customProps = { globalEventDistributor: state.globalEventDistributor };
-  // console.log('sub1-app-store010000');
+
   return (
     <Provider store={state.store}>
       <LocaleProvider locale={zhCN}>
