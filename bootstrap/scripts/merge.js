@@ -20,8 +20,9 @@ fs.readdir(rootPath, function(err, files) {
     return JSON.parse(fs.readFileSync(filename, { encoding: 'utf8' }));
   });
   const configFilename = path.join(rootPath, 'project.config.json');
-  const configStr = fs.readFileSync(configFilename, { encoding: 'utf8' });
-  const config = { ...JSON.parse(configStr), projects };
+  // const configStr = fs.readFileSync(configFilename, { encoding: 'utf8' });
+  // const config = { ...JSON.parse(configStr), projects };
+  const config = { projects };
 
   fs.writeFile(configFilename, JSON.stringify(config), err => {
     if (err) throw err;

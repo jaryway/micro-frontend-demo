@@ -1,43 +1,59 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>MICRO-FRONTEND-DEMO</title>
-    <% htmlWebpackPlugin.files.css.forEach(function(item,i){%>
-    <style><%= compilation.assets[item].source() %></style>
-    <% }) %>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script src="/libs/less.min.js"></script>
-    <script src="/lib/amd/system.min.js"></script>
-    <script src="/lib/amd/common-vendors.min.js"></script>
-    <!-- <script type="systemjs-importmap" src="/importmap.json"></script> -->
-    <!-- <script src="https://cdn.bootcss.com/react/16.8.6/umd/react.development.js"></script> -->
-    <!-- <script src="https://cdn.bootcss.com/react-dom/16.8.6/umd/react-dom.development.js"></script> -->
-    <!-- <script>
-      System.import('https://cdn.bootcss.com/jquery/3.2.1/jquery.js').then(m =>
-        console.log(m, 'dssd')
-      );
-    </script> -->
-    <script>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<title>生产经营监控管理系统-控制台</title>
+<% htmlWebpackPlugin.files.css.forEach(function(item,i){%>
+<style><%= compilation.assets[item].source() %></style>
+<% }) %>
+</head>
+<script>
+window.CONFIG={
+  API_BASE_URL:"http://192.10.169.201:31111",
+  IOFFICE_URL:"", // _yj
+  LOGIN_PAGE:"",
+  CUSTOM_ICON_NAMES:["eye-close","patient-feedback","complaint","doctor-file","ibook","my-profile","my-schedule","cus-service","plugin","upgrade","feedback","content-p","folder-2","text","content","leader","division","legalentity","group","excel","app","isv","more","more-h","flow","signature","hr","res-report","fill-form","notice","finish","folder-open-1","ques","tran-data","add","person-add","info-manage","bus-manage","email","fold","unfold","word","zip","send","import","pack-down","alarm","image","link-ext","quote","flower","select","checkbox","radio","text-input","textarea","replay","open-eye","closed-eye","tick","exit-fullscreen","full-screen","seal","shut-down","cancel","handing","location","inventory","meeting","custom-info-manage","news-notices","bbs","doc-manage","setting-1"],
+  ANDROID_APP_URL:'http://120.79.129.67:7777/ssmpHelper_v1.0.1_legu.apk',
+  IOS_APP_URL:'https://apps.apple.com/cn/app/%E8%88%B9%E6%B5%B7%E5%8A%A9%E6%89%8B/id1473250852'
+};
+</script>
+<script src="/libs/less.min.js?v=100"></script>
+<script src="/libs/qrcode.min.js?v=100"></script>
+<body style="margin:0;padding:0">
+  <link rel="stylesheet/less" type="text/css" href="/base-app/color.less" />
+  <script>window.less = { async: false, env: 'production' }; </script>
+  <script type="text/javascript" src="/libs/less.min.js"></script>
+  <div id="root"><%= htmlWebpackPlugin.options.loading.html %></div>
 
-    window.CONFIG={
-      API_BASE_URL:"http://192.10.169.212:31111",
-      IOFFICE_URL:"", // _yj
-      LOGIN_PAGE:"",
-      CUSTOM_ICON_NAMES:["eye-close","patient-feedback","complaint","doctor-file","ibook","my-profile","my-schedule","cus-service","plugin","upgrade","feedback","content-p","folder-2","text","content","leader","division","legalentity","group","excel","app","isv","more","more-h","flow","signature","hr","res-report","fill-form","notice","finish","folder-open-1","ques","tran-data","add","person-add","info-manage","bus-manage","email","fold","unfold","word","zip","send","import","pack-down","alarm","image","link-ext","quote","flower","select","checkbox","radio","text-input","textarea","replay","open-eye","closed-eye","tick","exit-fullscreen","full-screen","seal","shut-down","cancel","handing","location","inventory","meeting","custom-info-manage","news-notices","bbs","doc-manage","setting-1"],
-      ANDROID_APP_URL:'http://120.79.129.67:7777/ssmpHelper_v1.0.1_legu.apk',
-      IOS_APP_URL:'https://apps.apple.com/cn/app/%E8%88%B9%E6%B5%B7%E5%8A%A9%E6%89%8B/id1473250852'
-    };
-    </script>
+<!-- <script src="/libs/es6-promise.auto.js"></script>
+  <script src="/lib/amd/system.js"></script>
+  <script src="/lib/amd/common-vendors.min.js"></script> -->
 
-  <% htmlWebpackPlugin.files.js.forEach(function(item,i){%>
-  <script><%= compilation.assets[item].source() %></script>
-  <% }) %>
-  <script>
-      System.import('bootstrap').then(m => console.log(m, 'bootstrap'));
-  </script>
-  </body>
+    <!-- <script src="/libs/es6-promise.auto.js"></script> -->
+    <script src="/lib/amd/system.js"></script>
+    <!--<script src="https://cdn.bootcss.com/systemjs/6.1.2/system.js"></script>
+     <script src="https://cdn.bootcss.com/systemjs/6.1.2/extras/amd.js"></script>
+     <script src="https://cdn.bootcss.com/systemjs/6.1.2/extras/named-register.js"></script>
+     <script src="https://cdn.bootcss.com/systemjs/6.1.2/extras/use-default.js"></script>
+    <script src="/libs/css.js"></script> -->
+    <script src="/lib/amd/common-vendors.js"></script>
+    <!-- <script src="/common-vendors/react.production.min.js"></script>
+    <script src="/common-vendors/react-dom.production.min.js"></script>
+     <script src="/common-vendors/react-router-dom.min.js"></script>
+    <script src="/common-vendors/prop-types.min.js"></script>   
+    <script src="/common-vendors/history.min.js"></script>
+    <script src="/common-vendors/redux.min.js"></script>
+    <script src="/common-vendors/react-redux.min.js"></script>
+    <script src="/common-vendors/redux-thunk.min.js"></script>
+    <script src="/common-vendors/redux-promise-middleware.min.js"></script>
+    <script src="/common-vendors/single-spa.min.js"></script>-->
+
+<% htmlWebpackPlugin.files.js.forEach(function(item,i){%>
+<script><%= compilation.assets[item].source() %></script>
+<% }) %>
+<script>
+    System.import('bootstrap');
+</script>
+</body>
 </html>

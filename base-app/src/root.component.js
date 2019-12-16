@@ -10,24 +10,23 @@ import './App.css';
 const { AuthorizedRoute } = Authorized;
 
 function RootComponent({ store, history, globalEventDistributor, ...rest }) {
-  const [state, setState] = useState({ store, globalEventDistributor });
+  const [state, setState] = useState({ store, globalEventDistributor, history });
 
   useEffect(() => {
-    history.listen((location, action) => {
+    state.history.listen((location, action) => {
+      // console.log('base-app.history.listen', location, action);
       if (action === 'PUSH') {
         globalEventDistributor.dispatch({
           type: 'to',
           path: location.pathname,
           owner: 'base',
         });
-        const globalState = store.getState();
-        console.log('history.listen', globalState);
       }
     });
   }, []);
 
   const customProps = { globalEventDistributor: state.globalEventDistributor };
-  console.log('base-app-store', store.getState());
+  // console.log('base-app-store', store.getState());
   return (
     <Provider store={state.store}>
       {/* <BasicLayout {...customProps} /> */}

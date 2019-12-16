@@ -52,7 +52,7 @@ const concatCommonVendors = isAMD => {
             './node_modules/redux/dist/redux.min.js',
             './node_modules/react-redux/dist/react-redux.min.js',
             './node_modules/redux-thunk/dist/redux-thunk.min.js',
-            './node_modules/redux-promise-middleware/dist/umd/redux-promise-middleware.min.js',
+            './node_modules/redux-promise-middleware/dist/redux-promise-middleware.min.js',
             './node_modules/single-spa/lib/umd/single-spa.min.js',
           ]
     )
@@ -87,7 +87,12 @@ gulp.task('concat-vendors', done => {
 
 gulp.task(
   'default',
-  gulp.parallel('concat-systemjs-amd', 'concat-vendors-amd', 'concat-systemjs', 'concat-vendors')
+  gulp.series(
+    'concat-systemjs-amd',
+    'concat-vendors-amd'
+    //  'concat-systemjs',
+    //  'concat-vendors'
+  )
 );
 
 module.exports = gulp;

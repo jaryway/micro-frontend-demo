@@ -1,10 +1,13 @@
+const fs = require('fs');
 const path = require('path');
+const isWsl = require('is-wsl');
 // const webpack = require('webpack');
 // const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 // const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
 // const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 // const MergeIntoSingleFilePlugin = require('webpack-merge-and-include-globally');
 
 process.env.BABEL_ENV = 'production';
@@ -14,7 +17,7 @@ module.exports = {
   mode: 'production',
   entry: {
     // bootstrap: './src/Bootstrap.js',
-    bootstrap: './src/index.js',
+    bootstrap: ['@babel/polyfill', './src/index.js'],
     // vendors: ['react', 'react-dom'],
   },
   output: {
@@ -26,33 +29,55 @@ module.exports = {
     path: path.resolve(__dirname, '..', 'build'),
   },
   optimization: {
-    minimize: true,
-
-    // splitChunks: {
-    //   // chunks: "all",
-    //   // name: false
-    //   cacheGroups: {
-    //     'async-commons': {
-    //       // 其余异步加载包
-    //       chunks: 'async',
-    //       minChunks: 2,
-    //       name: 'async-commons',
-    //       priority: 90,
-    //     },
-    //     'commons': {
-    //       // 其余同步加载包
-    //       // chunks: 'all',
-    //       chunks: function(chunk) {
-    //         // console.log(chunk.name, '001010');
-    //         // 这里的name 可以参考在使用`webpack-ant-icon-loader`时指定的`chunkName`
-    //         return chunk.name !== 'antd-icons';
-    //       },
-    //       minChunks: 2,
-    //       name: 'commons',
-    //       priority: 80,
-    //     },
-    //   },
-    // },
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          parse: {
+            // We want terser to parse ecma 8 code. However, we don't want it
+            // to apply any minification steps that turns valid ecma 5 code
+            // into invalid ecma 5 code. This is why the 'compress' and 'output'
+            // sections only apply transformations that are ecma 5 safe
+            // https://github.com/facebook/create-react-app/pull/4234
+            ecma: 8,
+          },
+          compress: {
+            ecma: 5,
+            warnings: false,
+            // Disabled because of an issue with Uglify breaking seemingly valid code:
+            // https://github.com/facebook/create-react-app/issues/2376
+            // Pending further investigation:
+            // https://github.com/mishoo/UglifyJS2/issues/2011
+            comparisons: false,
+            // Disabled because of an issue with Terser breaking valid code:
+            // https://github.com/facebook/create-react-app/issues/5250
+            // Pending further investigation:
+            // https://github.com/terser-js/terser/issues/120
+            inline: 2,
+            // 删除所有的 `console` 语句
+            // 还可以兼容ie浏览器
+            drop_console: true,
+          },
+          mangle: {
+            safari10: true,
+          },
+          output: {
+            ecma: 5,
+            comments: false,
+            // Turned on because emoji and regex is not minified properly using default
+            // https://github.com/facebook/create-react-app/issues/2488
+            ascii_only: true,
+          },
+        },
+        // Use multi-process parallel running to improve the build speed
+        // Default number of concurrent runs: os.cpus().length - 1
+        // Disabled on WSL (Windows Subsystem for Linux) due to an issue with Terser
+        // https://github.com/webpack-contrib/terser-webpack-plugin/issues/21
+        parallel: !isWsl,
+        // Enable file caching
+        cache: true,
+        sourceMap: true,
+      }),
+    ],
   },
   module: {
     rules: [
@@ -107,6 +132,7 @@ module.exports = {
         minifyCSS: true,
         minifyURLs: true,
       },
+      loading: { html: fs.readFileSync(path.join(__dirname, './loading.html')) },
       // inlineSource: 'bootstrap.(js)$',
     }),
     // new HtmlWebpackInlineSourcePlugin(),

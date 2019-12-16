@@ -8,11 +8,11 @@ export class GlobalEventDistributor {
   }
 
   dispatch(event) {
-    console.log('GlobalEventDistributor.dispatch', event);
     this.stores.forEach(s => {
       s.dispatch(event);
       setTimeout(() => s.dispatch({ type: 'REFRESH' }));
     });
+    // console.log('GlobalEventDistributor.dispatch', event, this.stores);
   }
   getState() {
     // 通过 GlobalEventDistributor.getState() 返回整个站点的 state

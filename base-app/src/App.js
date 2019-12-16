@@ -77,7 +77,7 @@ function App({ history, globalEventDistributor, getCurrent, loading, ...rest }) 
   // console.log('rest', rest);
   useEffect(() => {
     getCurrent().then(() => {
-      globalEventDistributor.dispatch({ type: 'DID_MOUNT' });
+      globalEventDistributor.dispatch({ type: 'DID_GET_CURRENT' });
     });
   }, []);
 
@@ -145,14 +145,9 @@ const mapStateToProps = state => {
   return { loading: state.account.currentEmpLoading };
 };
 const mapDispatchToProps = { getCurrent: actions.account.getCurrent };
-// (_dispatch, { globalEventDistributor }) => {
-//   return { getCurrent: () => globalEventDistributor.dispatch(actions.account.getCurrent()) };
-// };
-
 export default withReducer(
   connect(
     mapStateToProps,
-    // actions.account
     mapDispatchToProps
   )(App)
 );

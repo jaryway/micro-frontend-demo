@@ -6,6 +6,7 @@ const SystemJS = window.System;
 // hash 模式
 export function hashPrefix(app) {
   return function(location) {
+   
     let isShow = false;
     //如果该应用 有多个需要匹配的路劲
     if (isArray(app.path)) {
@@ -16,9 +17,10 @@ export function hashPrefix(app) {
       });
     }
     // 普通情况
-    else if (location.hash.startsWith(`#${app.path || app.url}`)) {
+    else if (location.hash.startsWith(`#${app.url || app.path}`)) {
       isShow = true;
     }
+    // console.log('hashPrefix', isShow);
     return isShow;
   };
 }
@@ -36,7 +38,7 @@ export function pathPrefix(app) {
       });
     }
     // 普通情况
-    else if (location.pathname.indexOf(`${app.path || app.url}`) === 0) {
+    else if (location.pathname.indexOf(`${app.url || app.path}`) === 0) {
       isShow = true;
     }
     return isShow;
