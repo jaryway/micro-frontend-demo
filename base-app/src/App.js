@@ -6,6 +6,7 @@ import { Layout, Menu, Icon, Spin, message } from 'antd';
 import { dynamic, injectReducer } from 'hsp-utils';
 
 import actions from '@/_global/actions';
+import appReducer from '@/_global/reducers/app';
 import accountReducer from '@/_global/reducers/account';
 
 const { Header, Sider, Content } = Layout;
@@ -72,12 +73,27 @@ function SubApp() {
   );
 }
 
-function App({ history, globalEventDistributor, getCurrent, loading, ...rest }) {
+function App({
+  history,
+  globalEventDistributor,
+  getCurrent,
+  setCurrentMenuKey,
+  loading,
+  mountApp,
+  registerApp,
+  ...rest
+}) {
   const [collapsed, setCollapsed] = useState(false);
-  // console.log('rest', rest);
+  console.log('rest', rest);
   useEffect(() => {
+    // registerApp({
+    //   mount: () => {
+    //     console.log('portal-app.first.mount');
+    //     // resolve(reactLifecycles.mount(props));
+    //   },
+    // });
     getCurrent().then(() => {
-      globalEventDistributor.dispatch({ type: 'DID_GET_CURRENT' });
+      mountApp();
     });
   }, []);
 
@@ -85,8 +101,9 @@ function App({ history, globalEventDistributor, getCurrent, loading, ...rest }) 
     setCollapsed(!collapsed);
   }, [collapsed]);
 
-  const onMenuClick = useCallback(link => {
+  const onMenuClick = useCallback((key, link) => {
     history.push(link);
+    globalEventDistributor.dispatch({ type: 'CHANGE_ROOT_ACTIVE_MENU_KEY', payload: key });
   }, []);
 
   if (loading)
@@ -104,8 +121,9 @@ function App({ history, globalEventDistributor, getCurrent, loading, ...rest }) 
           theme='light'
           mode='inline'
           defaultSelectedKeys={['k1']}
-          onClick={({ item }) => {
-            onMenuClick(item.props['link']);
+          onClick={({ key, item }) => {
+            // console.log('onMenuClick', key, item);
+            onMenuClick(key, item.props['link']);
           }}
         >
           {renderMenu(menuList)}
@@ -144,7 +162,12 @@ const mapStateToProps = state => {
   console.log('base-app.state', state);
   return { loading: state.account.currentEmpLoading };
 };
-const mapDispatchToProps = { getCurrent: actions.account.getCurrent };
+const mapDispatchToProps = {
+  getCurrent: actions.account.getCurrent,
+  // setCurrentMenuKey: payload => ({ type: 'REGISTER_APP', payload }),
+  registerApp: payload => ({ type: 'REGISTER_APP', payload }),
+  mountApp: () => ({ type: 'MOUNT_APP' }),
+};
 export default withReducer(
   connect(
     mapStateToProps,

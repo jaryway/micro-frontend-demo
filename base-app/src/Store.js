@@ -8,7 +8,7 @@ export const history = createHistory();
 // const appReducers = {};
 // const moduleHotFile = './_global/reducers/index.js';
 const initialState = { refresh: 0 };
-const initialState1 = { mountApps: [] };
+// const initialState1 = { registerApps: [] };
 const middlewares = [thunk, promiseMiddleware({ promiseTypeDelimiter: '/' }), httpMiddleware];
 let devtools = () => noop => noop;
 
@@ -39,28 +39,33 @@ function to(state = initialState, action) {
   return { ...state, path: action.path };
 }
 
-function mount(state = initialState1, action) {
-  if (action.type === 'WILL_MOUNT') {
-    console.log('base-app.willMount', action, state);
-    return { ...state, mountApps: [...state.mountApps, action.payload.mount] };
+function _root(state = { registerApps: [], rootActiveMenuKey: '' }, action) {
+  if (action.type === 'REGISTER_APP') {
+    console.log('base-app.REGISTER_APP', action, state);
+    return { ...state, registerApps: [...state.registerApps, action.payload] };
   }
 
-  if (action.type === 'DID_MOUNT') {
-    const { mountApps } = state;
-    console.log('base-app.didMount', action, mountApps);
+  if (action.type === 'MOUNT_APP') {
+    const { registerApps } = state;
+    console.log('base-app.MOUNT_APP', action, registerApps);
 
-    for (let i = 0; i < mountApps.length; i++) {
-      const mountApp = mountApps[i];
-      mountApp();
+    for (let i = 0; i < registerApps.length; i++) {
+      const registerApp = registerApps[i];
+      registerApp.mount();
     }
 
-    return { ...state, mountApps: [] };
+    return { ...state, registerApps: [] };
+  }
+
+  if (action.type === 'CHANGE_ROOT_ACTIVE_MENU_KEY') {
+    console.log('base-app.CHANGE_ROOT_ACTIVE_MENU_KEY', action, state);
+    return { ...state, rootActiveMenuKey: action.payload };
   }
 
   return state;
 }
 
-const globalReducers = { namespace: () => 'base', render, to, mount };
+const globalReducers = { namespace: () => 'base', render, to, _root };
 const createReducer = asyncReducers => {
   console.log('base-app.createReducer', asyncReducers);
   const appReducer = combineReducers(asyncReducers);
