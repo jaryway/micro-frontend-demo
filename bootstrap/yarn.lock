@@ -3940,17 +3940,7 @@ gulp-uglify@^3.0.2:
     uglify-js "^3.0.5"
     vinyl-sourcemaps-apply "^0.2.0"
 
-gulp@^4.0.0:
-  version "4.0.2"
-  resolved "https://registry.npm.taobao.org/gulp/download/gulp-4.0.2.tgz#543651070fd0f6ab0a0650c6a3e6ff5a7cb09caa"
-  integrity sha1-VDZRBw/Q9qsKBlDGo+b/WnywnKo=
-  dependencies:
-    glob-watcher "^5.0.3"
-    gulp-cli "^2.2.0"
-    undertaker "^1.2.1"
-    vinyl-fs "^3.0.0"
-
-gulp@^4.0.2:
+gulp@^4.0.0, gulp@^4.0.2:
   version "4.0.2"
   resolved "https://registry.npm.taobao.org/gulp/download/gulp-4.0.2.tgz?cache=0&sync_timestamp=1571657644746&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fgulp%2Fdownload%2Fgulp-4.0.2.tgz#543651070fd0f6ab0a0650c6a3e6ff5a7cb09caa"
   integrity sha1-VDZRBw/Q9qsKBlDGo+b/WnywnKo=
@@ -7372,16 +7362,6 @@ systemjs-css-extra@^1.0.2:
   resolved "https://registry.npm.taobao.org/systemjs-css-extra/download/systemjs-css-extra-1.0.2.tgz#741ea15ce6febaa0745deafe34318506fdea19d5"
   integrity sha1-dB6hXOb+uqB0Xer+NDGFBv3qGdU=
 
-systemjs-plugin-css@^0.1.37:
-  version "0.1.37"
-  resolved "https://registry.npm.taobao.org/systemjs-plugin-css/download/systemjs-plugin-css-0.1.37.tgz#684847252ca69b7da24a1201094c86274324e82f"
-  integrity sha1-aEhHJSymm32iShIBCUyGJ0Mk6C8=
-
-systemjs-plugin-json@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.npm.taobao.org/systemjs-plugin-json/download/systemjs-plugin-json-0.3.0.tgz#23f2492dea7e46a060bc5d14ba983ee2b60cf2d5"
-  integrity sha1-I/JJLep+RqBgvF0Uupg+4rYM8tU=
-
 systemjs@6.1.2:
   version "6.1.2"
   resolved "http://192.10.169.216:4873/systemjs/-/systemjs-6.1.2.tgz#5b15020c1934d9e8f96a5c95b7a4a5e60b6d0ec3"
@@ -8196,9 +8176,9 @@ websocket-driver@>=0.5.1:
     websocket-extensions ">=0.1.1"
 
 websocket-extensions@>=0.1.1:
-  version "0.1.3"
-  resolved "http://192.10.169.216:4873/websocket-extensions/-/websocket-extensions-0.1.3.tgz#5d2ff22977003ec687a4b87073dfbbac146ccf29"
-  integrity sha1-XS/yKXcAPsaHpLhwc9+7rBRszyk=
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/websocket-extensions/-/websocket-extensions-0.1.4.tgz#7f8473bc839dfd87608adb95d7eb075211578a42"
+  integrity sha512-OqedPIGOfsDlo31UNwYbCFMSaO9m9G/0faIHj5/dZFDMFqPTcx6UwqyOy3COEaEOg/9VsGIpdqn62W5KhoKSpg==
 
 which-module@^1.0.0:
   version "1.0.0"
