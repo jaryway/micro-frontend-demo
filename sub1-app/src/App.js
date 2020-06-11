@@ -83,6 +83,7 @@ const withReducer = injectReducer([
 ]);
 
 const mapStateToProps = state => {
+  console.log('sub1-app.mapStateToProps', state);
   return { loading: state.account.currentEmpLoading };
 };
 const mapDispatchToProps = (dispatch, { globalEventDistributor }) => {

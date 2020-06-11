@@ -8,7 +8,7 @@ const rename = require('gulp-rename');
 // const babel = require('gulp-babel');
 // const amdOptimize = require('amd-optimize');
 // const buildDir = 'build';
-const libDir = 'build/lib';
+const libDir = 'public/lib';
 // const esDir = 'build/es';
 
 var uglifyjs = require('uglify-es');
@@ -22,10 +22,10 @@ const concatSystemJS = isAMD => {
       // './src/lib.js'
       [
         // systemjs
-        './node_modules/systemjs/dist/system.js',
-        isAMD && './node_modules/systemjs/dist/extras/amd.js',
-        isAMD && './node_modules/systemjs/dist/extras/named-register.js',
-        './node_modules/systemjs/dist/extras/use-default.js',
+        './node_modules/systemjs/dist/system.min.js',
+        isAMD && './node_modules/systemjs/dist/extras/amd.min.js',
+        isAMD && './node_modules/systemjs/dist/extras/named-register.min.js',
+        './node_modules/systemjs/dist/extras/use-default.min.js',
         './node_modules/systemjs-css-extra/dist/css.min.js',
       ].filter(Boolean)
     )

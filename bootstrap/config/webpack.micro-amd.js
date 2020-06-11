@@ -1,34 +1,57 @@
 const fs = require('fs');
 const path = require('path');
 const isWsl = require('is-wsl');
-// const webpack = require('webpack');
-// const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-// const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
-// const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-// const MergeIntoSingleFilePlugin = require('webpack-merge-and-include-globally');
 
-process.env.BABEL_ENV = 'production';
-process.env.NODE_ENV = 'production';
+const isEnvDevelopment = process.env.NODE_ENV === 'development';
+const isEnvProduction = process.env.NODE_ENV === 'production';
+
+const deployAppsProxy = {
+  '/base-app': { target: 'http://localhost:3801/', pathRewrite: { '^/base-app': '' } },
+  '/workflow-app': { target: 'http://localhost:3803/', pathRewrite: { '^/workflow-app': '' } },
+  '/knowledge-app': { target: 'http://localhost:3804/', pathRewrite: { '^/knowledge-app': '' } },
+  '/profile-app': { target: 'http://localhost:3805/', pathRewrite: { '^/profile-app': '' } },
+  '/punch-app': { target: 'http://localhost:3806/', pathRewrite: { '^/punch-app': '' } },
+  '/schedule-app': { target: 'http://localhost:3807/', pathRewrite: { '^/schedule-app': '' } },
+  '/notice-app': { target: 'http://localhost:3808/', pathRewrite: { '^/notice-app': '' } },
+  '/meeting-app': { target: 'http://localhost:3809/', pathRewrite: { '^/meeting-app': '' } },
+  '/box-app': { target: 'http://localhost:3810/', pathRewrite: { '^/box-app': '' } },
+  '/ssmp-app': { target: 'http://localhost:3811/', pathRewrite: { '^/ssmp-app': '' } },
+  '/homepage-app': { target: 'http://localhost:3812/', pathRewrite: { '^/homepage-app': '' } },
+  '/portal-app': { target: 'http://localhost:3813/', pathRewrite: { '^/portal-app': '' } },
+};
+console.log(process.env.NODE_ENV);
 
 module.exports = {
-  mode: 'production',
+  mode: isEnvProduction ? 'production' : isEnvDevelopment ? 'development' : 'none',
+  // devtool: 'source-map',
+  devtool: isEnvProduction ? false : isEnvDevelopment && 'cheap-module-source-map',
   entry: {
-    // bootstrap: './src/Bootstrap.js',
-    bootstrap: ['@babel/polyfill', './src/index.js'],
-    // vendors: ['react', 'react-dom'],
+    bootstrap: ['@babel/polyfill', './src/index.ts'],
   },
   output: {
-    publicPath: '',
-    // filename: 'Bootstrap.[hash:5].js',
+    publicPath: '/',
+    filename: 'Bootstrap.[hash:5].js',
     libraryTarget: 'amd',
     filename: '[name].js',
-    library: 'bootstrap',
     path: path.resolve(__dirname, '..', 'build'),
   },
+  devServer: {
+    contentBase: './public',
+    proxy: {
+      ...deployAppsProxy,
+      // '/base-app': { target: 'http://192.10.169.212:8111/' },
+    },
+  },
+  resolve: {
+    modules: [__dirname, 'node_modules'],
+    extensions: ['.tsx', '.ts', '.js'],
+  },
   optimization: {
+    minimize: isEnvProduction,
     minimizer: [
       new TerserPlugin({
         terserOptions: {
@@ -82,82 +105,76 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
+      {
         test: /\.js?$/,
-        exclude: [path.resolve(__dirname, 'node_modules')],
+        exclude: /node_modules/,
         loader: require.resolve('babel-loader'),
-        options: {
-          presets: [
-            [
-              '@babel/preset-env',
-              {
-                loose: true,
-                modules: false,
-                targets: {
-                  browsers: [
-                    '>1%',
-                    'last 4 versions',
-                    'Firefox ESR',
-                    'ie >= 9',
-                    'iOS >= 8',
-                    'Android >= 4',
-                  ],
-                },
-              },
-            ],
-            ['react-app'],
-          ],
-        },
       },
     ],
   },
   node: {
     fs: 'empty',
   },
-  resolve: {
-    modules: [__dirname, 'node_modules'],
-  },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, '..', 'src/index.ejs'),
-      inject: false,
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeRedundantAttributes: true,
-        useShortDoctype: true,
-        removeEmptyAttributes: true,
-        removeStyleLinkTypeAttributes: true,
-        keepClosingSlash: true,
-        minifyJS: true,
-        minifyCSS: true,
-        minifyURLs: true,
-      },
-      loading: { html: fs.readFileSync(path.join(__dirname, './loading.html')) },
-      // inlineSource: 'bootstrap.(js)$',
-    }),
-    // new HtmlWebpackInlineSourcePlugin(),
-    new CopyWebpackPlugin([
-      // { from: path.resolve(__dirname, '..', 'public/project.config.json') },
-      {
-        from: path.resolve(__dirname, '..', 'public/**/*'),
-        transformPath(targetPath) {
-          return targetPath.replace('public', '');
+    new HtmlWebpackPlugin(
+      Object.assign(
+        {},
+        {
+          inject: false,
+          title: 'MICRO_FRONTEND_DEMO',
+          template: path.resolve(__dirname, '..', 'src/index.ejs'),
+          loading: { html: fs.readFileSync(path.join(__dirname, './loading.html')) },
         },
-      },
-    ]),
-    // new CleanWebpackPlugin({ cleanOnceBeforeBuildPatterns: [ path.resolve(__dirname, '..', 'build')] }),
-  ],
-  devtool: 'source-map',
+        isEnvProduction
+          ? {
+              minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeRedundantAttributes: true,
+                useShortDoctype: true,
+                removeEmptyAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                keepClosingSlash: true,
+                minifyJS: true,
+                minifyCSS: true,
+                minifyURLs: true,
+              },
+            }
+          : undefined
+      )
+    ),
+    isEnvProduction &&
+      new CopyWebpackPlugin([
+        {
+          from: path.resolve(__dirname, '..', 'public/**/*'),
+          transformPath(targetPath) {
+            return targetPath.replace('public', '');
+          },
+        },
+      ]),
+    isEnvProduction &&
+      new CleanWebpackPlugin({
+        cleanOnceBeforeBuildPatterns: [path.resolve(__dirname, '..', 'build')],
+      }),
+  ].filter(Boolean),
+
   externals: [
     {
       'react': 'react',
       'react-dom': 'react-dom',
       'react-router-dom': 'react-router-dom',
+      'redux': 'redux',
+      'redux-thunk': 'redux-thunk',
+      'react-redux': 'react-redux',
+      'redux-promise-middleware': 'redux-promise-middleware',
+      'single-spa': 'single-spa',
+      'single-spa-react': 'single-spa-react',
       'history': 'history',
       'prop-types': 'prop-types',
-      'redux': 'redux',
-      'react-redux': 'react-redux',
-      'single-spa': 'single-spa',
     },
   ],
 };

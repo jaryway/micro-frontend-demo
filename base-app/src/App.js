@@ -2,7 +2,7 @@ import './App.css';
 import React, { useState, useCallback, useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Layout, Menu, Icon, Spin, message } from 'antd';
+import { Layout, Menu, Icon, Spin, message, Button } from 'antd';
 import { dynamic, injectReducer } from 'hsp-utils';
 
 import actions from '@/_global/actions';
@@ -34,10 +34,10 @@ function renderMenu(menus) {
         <SubMenu
           key={key}
           title={
-            <span>
+            <>
               <Icon type='mail' />
               <span>{title}</span>
-            </span>
+            </>
           }
         >
           {renderMenu(children)}
@@ -66,6 +66,7 @@ function Home() {
 }
 
 function SubApp() {
+  console.log('match-subapp');
   return (
     <div id='subapp'>
       <h2>SubApp</h2>
@@ -92,7 +93,9 @@ function App({
     //     // resolve(reactLifecycles.mount(props));
     //   },
     // });
+
     getCurrent().then(() => {
+      // globalEventDistributor
       mountApp();
     });
   }, []);
@@ -136,8 +139,21 @@ function App({
             type={collapsed ? 'menu-unfold' : 'menu-fold'}
             onClick={toggle}
           />
+          <Button
+            onClick={() => {
+              new Promise(resolve => {
+                setTimeout(() => {
+                  resolve(menuList);
+                  globalEventDistributor.dispatch({ type: 'ROOT_MENU_LIST', payload: menuList });
+                }, 1500);
+              });
+            }}
+          >
+            Click
+          </Button>
         </Header>
         <Content
+          id='maincontent'
           style={{
             margin: '24px 16px',
             padding: 24,
@@ -149,7 +165,8 @@ function App({
             <Route exact path='/' component={Home} />
             <Route path='/user' component={User} />
             <Route path='/about' component={About} />
-            <Route path='/*-app' component={SubApp} />
+            {/* <Route path='/*-app' component={SubApp} /> */}
+            {/* <Route render={() => <div id='maincontent'></div>} /> */}
           </Switch>
         </Content>
       </Layout>

@@ -39,12 +39,13 @@ function to(state = initialState, action) {
   return { ...state, path: action.path };
 }
 
-function _root(state = { registerApps: [], rootActiveMenuKey: '' }, action) {
+function _root(state = { registerApps: [], rootActiveMenuKey: 'k1' }, action) {
+  // 注册子 App
   if (action.type === 'REGISTER_APP') {
     console.log('base-app.REGISTER_APP', action, state);
     return { ...state, registerApps: [...state.registerApps, action.payload] };
   }
-
+  // 挂载子 App
   if (action.type === 'MOUNT_APP') {
     const { registerApps } = state;
     console.log('base-app.MOUNT_APP', action, registerApps);
@@ -57,9 +58,15 @@ function _root(state = { registerApps: [], rootActiveMenuKey: '' }, action) {
     return { ...state, registerApps: [] };
   }
 
+  // 更改菜单选中项
   if (action.type === 'CHANGE_ROOT_ACTIVE_MENU_KEY') {
     console.log('base-app.CHANGE_ROOT_ACTIVE_MENU_KEY', action, state);
     return { ...state, rootActiveMenuKey: action.payload };
+  }
+
+  if (action.type === 'ROOT_MENU_LIST') {
+    console.log('base-app.ROOT_MENU_LIST', action, state);
+    return { ...state, menuList: action.payload };
   }
 
   return state;

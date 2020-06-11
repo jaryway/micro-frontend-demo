@@ -1,24 +1,24 @@
 export class GlobalEventDistributor {
+  stores: any[];
   constructor() {
     this.stores = [];
   }
 
-  registerStore(store) {
+  registerStore(store: any) {
     this.stores.push(store);
   }
 
-  dispatch(event) {
+  dispatch(event: { type: string; payload?: any }) {
     this.stores.forEach(s => {
       s.dispatch(event);
-      setTimeout(() => s.dispatch({ type: 'REFRESH' }));
     });
     // console.log('GlobalEventDistributor.dispatch', event, this.stores);
   }
   getState() {
     // 通过 GlobalEventDistributor.getState() 返回整个站点的 state
-    let state = {};
+    let state: any = {};
     this.stores.forEach(s => {
-      let currentState = s.getState();
+      const currentState: { namespace: string } = s.getState();
       state[currentState.namespace] = currentState;
     });
     return state;

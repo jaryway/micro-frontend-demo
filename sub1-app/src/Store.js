@@ -41,6 +41,10 @@ function _root(state = { rootActiveMenuKey: '' }, action) {
     return { ...state, rootActiveMenuKey: action.payload };
   }
 
+  if (action.type === 'ROOT_MENU_LIST') {
+    return { ...state, menuList: action.payload };
+  }
+
   return state;
 }
 
