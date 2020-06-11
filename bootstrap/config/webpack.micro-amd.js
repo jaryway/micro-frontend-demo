@@ -14,7 +14,7 @@ const deployAppsProxy = {
   '/app-sub1': { target: 'http://localhost:3702/', pathRewrite: { '^/app-sub1': '' } },
   '/app-sub2': { target: 'http://localhost:3703/', pathRewrite: { '^/app-sub2': '' } },
 };
-console.log(process.env.NODE_ENV);
+// console.log(process.env.NODE_ENV);
 
 module.exports = {
   mode: isEnvProduction ? 'production' : isEnvDevelopment ? 'development' : 'none',
@@ -33,11 +33,11 @@ module.exports = {
   devServer: {
     contentBase: './public',
     port: 3700,
-    historyApiFallback: {
-      // Paths with dots should still use the history fallback.
-      // See https://github.com/facebook/create-react-app/issues/387.
-      disableDotRule: true,
-    },
+    // historyApiFallback: {
+    //   // Paths with dots should still use the history fallback.
+    //   // See https://github.com/facebook/create-react-app/issues/387.
+    //   disableDotRule: true,
+    // },
     proxy: {
       ...deployAppsProxy,
     },

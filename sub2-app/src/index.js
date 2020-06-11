@@ -1,13 +1,13 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import singleSpaReact from 'single-spa-react';
+import React from "react";
+import ReactDOM from "react-dom";
+import singleSpaReact from "single-spa-react";
 // import * as serviceWorker from './serviceWorker';
-import RootComponent from './root.component';
-import { storeInstance, history } from './Store';
+import RootComponent from "./root.component";
+import { storeInstance, history } from "./Store";
 
-console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxx", process.env.MICRO);
 
-if (process.env.NODE_ENV === 'development' && !process.env.MICRO) {
+if (process.env.NODE_ENV === "development" && !process.env.MICRO) {
   // 开发环境直接渲染
   ReactDOM.render(
     <RootComponent
@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === 'development' && !process.env.MICRO) {
       store={storeInstance}
       globalEventDistributor={storeInstance}
     />,
-    document.getElementById('root')
+    document.getElementById("root")
   );
 }
 
@@ -36,17 +36,17 @@ const reactLifecycles = singleSpaReact({
 });
 
 function domElementGetter() {
-  let el = document.getElementById('sub2-app-page');
+  let el = document.getElementById("sub2-app-page");
   if (!el) {
-    el = document.createElement('div');
-    el.id = 'sub2-app-page';
+    el = document.createElement("div");
+    el.id = "sub2-app-page";
   }
 
   let timer = 1;
 
   const callback = () => {
-    if (document.querySelector('#subapp')) {
-      document.querySelector('#subapp').appendChild(el);
+    if (document.querySelector("#subapp")) {
+      document.querySelector("#subapp").appendChild(el);
       clearInterval(timer);
       timer = null;
     }
