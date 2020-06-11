@@ -1,20 +1,20 @@
 /* eslint-disable */
 // import axios from "axios";
 // 基于 flyio.js 实现的 api
-import Fly from 'flyio/dist/npm/fly';
+import Fly from "flyio/dist/npm/fly";
 // import { Base64 } from "js-base64";
-import { notification } from 'antd';
-import { createHashHistory } from 'history';
-import { getAccessTokenAsync, ShowMessage } from './utils';
+import { notification } from "antd";
+// import { createHashHistory } from 'history';
+import { getAccessTokenAsync, ShowMessage } from "./utils";
 
 export {
   normalApi,
   checkLoggedIn,
   getAccessTokenAsync,
   getTokenInfoFromLocalStorage,
-} from './utils';
+} from "./utils";
 
-const history = createHashHistory();
+// const history = createHashHistory();
 const showMessage = new ShowMessage();
 
 function createApi() {
@@ -25,11 +25,13 @@ function createApi() {
   fly.interceptors.request.use(setToken2HeaderBeforeRequest);
   fly.interceptors.response.use(responseOkHandler, responseErrorHandler);
 
-  const api = (url, newOptions = { method: 'GET' }) => {
+  const api = (url, newOptions = { method: "GET" }) => {
     const { data = null } = newOptions;
-    const isObject = typeof url === 'object';
+    const isObject = typeof url === "object";
 
-    const options = isObject ? { ...url, ...newOptions } : { url, ...newOptions };
+    const options = isObject
+      ? { ...url, ...newOptions }
+      : { url, ...newOptions };
     const req = fly.request(options.url, null, { ...options, body: data });
 
     // 支持上传进度条
@@ -45,22 +47,21 @@ function createApi() {
     // return http;
   };
 
-  api.get = (url, newOptions) => api(url, { ...newOptions, method: 'GET' });
-  api.post = (url, newOptions) => api(url, { ...newOptions, method: 'POST' });
+  api.get = (url, newOptions) => api(url, { ...newOptions, method: "GET" });
+  api.post = (url, newOptions) => api(url, { ...newOptions, method: "POST" });
 
   return api;
 }
 
 export function goToLogin(noReturnURL) {
-  const returnurl = window.location.hash.length ? window.location.hash.substring(1) : '/';
-  // 已经在登录页面了
-  if (returnurl.toLowerCase().indexOf('returnurl') > -1) return false;
-
-  history.push({
-    pathname: '/login',
-    search: noReturnURL ? '' : `returnurl=${encodeURIComponent(returnurl)}`,
-    //queryString.stringify({ returnurl })
-  });
+  // const returnurl = window.location.hash.length ? window.location.hash.substring(1) : '/';
+  // // 已经在登录页面了
+  // if (returnurl.toLowerCase().indexOf('returnurl') > -1) return false;
+  // history.push({
+  //   pathname: '/login',
+  //   search: noReturnURL ? '' : `returnurl=${encodeURIComponent(returnurl)}`,
+  //   //queryString.stringify({ returnurl })
+  // });
 }
 
 export default createApi();
@@ -80,13 +81,16 @@ async function setToken2HeaderBeforeRequest(request) {
   request = clearUpRequestParams(request);
 
   // 如果是去获取 token 则直接跳过
-  if (url.indexOf('/token') > 0) return request;
+  if (url.indexOf("/token") > 0) return request;
 
   // log(`发起请求：path:${request.url}，baseURL:${request.baseURL}`);
   const access_token = await getAccessTokenAsync();
 
   request.params = { ...request.params, __t: Date.now() };
-  request.headers = { ...request.headers, Authorization: `Bearer ${access_token}` };
+  request.headers = {
+    ...request.headers,
+    Authorization: `Bearer ${access_token}`,
+  };
 
   return request;
 }
@@ -123,8 +127,8 @@ function responseOkHandler(response) {
   //   return Promise.reject(response.data || response);
   // }
 
-  if (errMessage === '系统错误') {
-    showMessage('发生网络错误-系统错误');
+  if (errMessage === "系统错误") {
+    showMessage("发生网络错误-系统错误");
   }
 
   // token 无效
@@ -141,14 +145,14 @@ function responseErrorHandler(error) {
   const { status, message: errMessage } = error || {};
 
   if (status && status === 401) {
-    console.error('无效 token', errMessage);
+    console.error("无效 token", errMessage);
     // 401 无效 token
     // todo: transfer to login page
     transfer2LoginPage();
   } else {
     // 其他网络错误状态
     // todo: 谈个提示，发生网络错误
-    showMessage(errMessage || '网络错误');
+    showMessage(errMessage || "网络错误");
   }
 
   return error;
@@ -169,7 +173,7 @@ function clearUpRequestParams(request) {
   const { body, params: _params, method } = request;
   const mergeParams = {
     ..._params,
-    ...(method.toUpperCase() === 'GET' ? body : {}),
+    ...(method.toUpperCase() === "GET" ? body : {}),
   };
 
   // 移除 params 中 undefined 、null 数据
@@ -177,7 +181,7 @@ function clearUpRequestParams(request) {
     .filter(([, v]) => !(v === undefined || v === null))
     .reduce((prev, [k, v]) => ({ ...prev, [k]: v }), {});
 
-  if (method.toUpperCase() === 'GET') request.body = {};
+  if (method.toUpperCase() === "GET") request.body = {};
   request.params = params;
 
   return request;

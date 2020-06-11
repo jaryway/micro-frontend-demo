@@ -33,11 +33,11 @@ module.exports = {
   devServer: {
     contentBase: './public',
     port: 3700,
-    // historyApiFallback: {
-    //   // Paths with dots should still use the history fallback.
-    //   // See https://github.com/facebook/create-react-app/issues/387.
-    //   disableDotRule: true,
-    // },
+    historyApiFallback: {
+      // Paths with dots should still use the history fallback.
+      // See https://github.com/facebook/create-react-app/issues/387.
+      disableDotRule: true,
+    },
     proxy: {
       ...deployAppsProxy,
     },
