@@ -147,6 +147,8 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.10.1",
+    "@babel/plugin-proposal-decorators": "^7.10.1",
     "babel-plugin-import": "^1.12.2",
     "copyfiles": "^2.1.1",
     "eslint-config-airbnb": "18.0.1",
