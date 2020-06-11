@@ -95,10 +95,9 @@ export async function registerApp(
 //
 export function checkActive(prefix: string | string[], mode: 'Browser' | 'Hash' = 'Browser') {
   return (location: any) => {
-    // console.log('checkActive', location);
     //如果该应用 有多个需要匹配的路径
     const pathname = mode === 'Browser' ? location.pathname : location.hash.slice(1);
-
+    // console.log('checkActive', location, pathname);
     if (typeof prefix !== 'string') return prefix.some((m) => pathname.startsWith(m));
     // 普通情况
     return pathname.startsWith(prefix);

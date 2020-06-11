@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
-import { createHashHistory as createHistory } from 'history';
+import { createBrowserHistory as createHistory } from 'history';
 import thunk from 'redux-thunk';
 import promiseMiddleware from 'redux-promise-middleware';
 import httpMiddleware from './middleware/httpMiddleware';

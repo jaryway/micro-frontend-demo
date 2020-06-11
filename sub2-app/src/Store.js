@@ -1,5 +1,5 @@
-import { createStore, combineReducers } from 'redux';
-import { createHashHistory as createHistory } from 'history';
+import { createStore, combineReducers, compose } from 'redux';
+import { createBrowserHistory as createHistory } from 'history';
 // import createHistory from 'history/createHashHistory';
 export const history = createHistory();
 
@@ -29,7 +29,7 @@ function _root(state = { rootActiveMenuKey: '' }, action) {
 }
 
 const globalReducers = { namespace: () => 'sub2', render, to, _root };
-const createReducer = asyncReducers => {
+const createReducer = (asyncReducers) => {
   console.log('sub2-app.createReducer', asyncReducers);
   const appReducer = combineReducers(asyncReducers);
   return (state, action) => {
@@ -43,6 +43,6 @@ const createReducer = asyncReducers => {
   };
 };
 
-export const storeInstance = createStore(createReducer(globalReducers), {}, compose(...enhancers));
+export const storeInstance = createStore(createReducer(globalReducers), {});
 storeInstance.globalReducers = globalReducers;
 storeInstance.createReducer = createReducer;

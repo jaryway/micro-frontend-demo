@@ -25,7 +25,6 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
-const HtmlWebpackProjectConfigPlugin = require('html-webpack-project-config-plugin');
 const eslint = require('eslint');
 
 const postcssNormalize = require('postcss-normalize');
@@ -51,14 +50,16 @@ const lessModuleRegex = /\.module\.(less)$/;
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
-module.exports = function(webpackEnv) {
+module.exports = function (webpackEnv) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
-
+  const isMicro = process.env.MICRO === 'true';
   // Webpack uses `publicPath` to determine where the app is being served from.
   // It requires a trailing slash, or the file assets will get an incorrect path.
   // In development, we always serve from the root. This makes config easier.
-  const publicPath = isEnvProduction ? paths.servedPath : isEnvDevelopment && '/';
+  const publicPath = isEnvProduction
+    ? paths.servedPath
+    : isEnvDevelopment && (isMicro ? paths.servedPath : '/');
   // Some apps do not use client-side routing with pushState.
   // For these, "homepage" can be set to "." to enable relative asset paths.
   const shouldUseRelativeAssetPaths = publicPath === './';
@@ -170,7 +171,7 @@ module.exports = function(webpackEnv) {
       // In development, it does not produce real files.
       filename: isEnvProduction
         ? 'static/js/[name].js?v=[contenthash:8]'
-        : isEnvDevelopment && 'static/js/bundle.js',
+        : isEnvDevelopment && 'static/js/[name].js',
       // TODO: remove this when upgrading to webpack 5
       futureEmitAssets: true,
       // There are also additional JS chunk files if you use code splitting.
@@ -182,8 +183,9 @@ module.exports = function(webpackEnv) {
       publicPath: publicPath,
       // Point sourcemap entries to original disk location (format as URL on Windows)
       devtoolModuleFilenameTemplate: isEnvProduction
-        ? info => path.relative(paths.appSrc, info.absoluteResourcePath).replace(/\\/g, '/')
-        : isEnvDevelopment && (info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
+        ? (info) => path.relative(paths.appSrc, info.absoluteResourcePath).replace(/\\/g, '/')
+        : isEnvDevelopment &&
+          ((info) => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
       // Prevents conflicts when multiple Webpack runtimes (from different apps)
       // are used on the same page.
       jsonpFunction: `webpackJsonp${appPackageJson.name}`,
@@ -257,10 +259,7 @@ module.exports = function(webpackEnv) {
       // Automatically split vendor and commons
       // https://twitter.com/wSokra/status/969633336732905474
       // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
-      splitChunks: {
-        chunks: 'all',
-        name: false,
-      },
+      // splitChunks: { chunks: 'all', name: false },
       // // Keep the runtime chunk separated to enable long term caching
       // // https://twitter.com/wSokra/status/969679223278505985
       // // https://github.com/facebook/create-react-app/issues/5358
@@ -281,8 +280,8 @@ module.exports = function(webpackEnv) {
       // `web` extension prefixes have been added for better support
       // for React Native Web.
       extensions: paths.moduleFileExtensions
-        .map(ext => `.${ext}`)
-        .filter(ext => useTypeScript || !ext.includes('ts')),
+        .map((ext) => `.${ext}`)
+        .filter((ext) => useTypeScript || !ext.includes('ts')),
       alias: {
         '@': path.join(__dirname, '..', 'src'),
         'api': path.join(__dirname, '..', 'src/api/index.fly'),
@@ -509,7 +508,7 @@ module.exports = function(webpackEnv) {
         Object.assign(
           {},
           {
-            inject: true,
+            inject: false,
             template: paths.appHtml,
             chunks: ['main'],
           },
@@ -578,13 +577,36 @@ module.exports = function(webpackEnv) {
         fileName: 'asset-manifest.json',
         publicPath: publicPath,
         generate: (seed, files) => {
-          const manifestFiles = files.reduce(function(manifest, file) {
+          const manifestFiles = files.reduce(function (manifest, file) {
             manifest[file.name] = file.path;
             return manifest;
           }, seed);
 
           return {
             files: manifestFiles,
+          };
+        },
+      }),
+      new ManifestPlugin({
+        fileName: 'project.json',
+        publicPath: publicPath,
+        generate: (seed, files, entrypoints) => {
+          const entrypointFiles = Object.entries(entrypoints).reduce((prev, [k, v]) => {
+            return {
+              ...prev,
+              [k]: v
+                .filter((m) => !(m.endsWith('.map') || m.indexOf('.map?v=') > 0))
+                .map((m) => `${publicPath}${m}`),
+            };
+          }, {});
+
+          // onsole.log('entrypoints', entrypointFiles);
+
+          return {
+            name: 'sub1',
+            appName: 'sub1-app',
+            prefix: '/sub1-app',
+            entrypoints: entrypointFiles,
           };
         },
       }),
@@ -636,16 +658,6 @@ module.exports = function(webpackEnv) {
           silent: true,
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined,
-        }),
-      isEnvProduction &&
-        new HtmlWebpackProjectConfigPlugin({
-          config: {
-            name: appPackageJson.name,
-            path: ['/sub1-app'],
-            prefix: '/sub1-app',
-            store: `${publicPath}static/js/store.js`,
-          },
-          configFilename: 'project.json',
         }),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.

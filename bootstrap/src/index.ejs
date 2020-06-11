@@ -19,13 +19,13 @@ window.CONFIG={
 <!-- <link rel="stylesheet/less" type="text/css" href="/color.less" /> -->
 <script>
   window.deployApps=[
-    'app-monitor',
-  // 'app-box','app-knowledge','app-homepage','app-meeting',
-  // 'app-notice','app-portal','app-profile','app-punch','app-schedule','app-ssmp','app-innerssmp'
+    'app-base',
+    'app-sub1',
+    'app-sub2',
   ];
   window.less = { async: false, env: 'production' }; </script>
 <script type="text/javascript" src="/libs/less.min.js"></script>
-<div id="root"><%= htmlWebpackPlugin.options.loading %></div>
+<div id="root"><%= htmlWebpackPlugin.options.loading.html %></div>
 <script src="/libs/systemjs/system.min.js"></script>
 <script type="systemjs-importmap">
   {

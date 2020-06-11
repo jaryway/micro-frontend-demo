@@ -5,7 +5,9 @@ import singleSpaReact from 'single-spa-react';
 import RootComponent from './root.component';
 import { storeInstance, history } from './Store';
 
-if (process.env.NODE_ENV === 'development') {
+// console.log('xxxxxxxx', 445);
+
+if (process.env.NODE_ENV === 'development' && !process.env.MICRO) {
   // 开发环境直接渲染
   ReactDOM.render(
     <RootComponent
@@ -21,7 +23,7 @@ function ensureMount(cb) {
   let timer = 1;
   console.log('sub1-app.mount.ensureMount');
   const callback = () => {
-    if (document.querySelector('#maincontent')) {
+    if (document.querySelector('#subapp')) {
       console.log('sub1-app.mount.ensureMount.find.subapp');
       clearInterval(timer);
       timer = null;
@@ -50,9 +52,9 @@ const reactLifecycles = singleSpaReact({
   // },
   loadRootComponent: () => {
     console.log('sub1-app.mount.loadRootComponent.initial');
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       ensureMount(() =>
-        resolve(props => {
+        resolve((props) => {
           console.log('sub1-app.mount.loadRootComponent.appendChild', props);
           return (
             <RootComponent
@@ -69,33 +71,45 @@ const reactLifecycles = singleSpaReact({
   domElementGetter,
 });
 
-function domElementGetter() {
-  // Make sure there is a div for us to render into
-  let el = document.getElementById('sub1-app');
-  if (!el) {
-    el = document.createElement('div');
-    el.id = 'sub1-app';
-    document.getElementById('maincontent').appendChild(el);
-  }
-
-  return el;
-}
-
 // function domElementGetter() {
-//   console.log('sub1-app.mount.domElementGetter');
-//   let el = document.getElementById('sub-app-page');
+//   // Make sure there is a div for us to render into
+//   let el = document.getElementById('sub1-app');
 //   if (!el) {
 //     el = document.createElement('div');
-//     el.id = 'sub-app-page';
+//     el.id = 'sub1-app';
+//     document.getElementById('subapp').appendChild(el);
 //   }
-
-//   ensureMount(() => {
-//     document.querySelector('#subapp').appendChild(el);
-//     console.log('sub1-app.mount.ensureMount.append2document');
-//   });
 
 //   return el;
 // }
+
+function domElementGetter() {
+  let el = document.getElementById('sub1-app-page');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'sub1-app-page';
+  }
+
+  let timer = 1;
+
+  const callback = () => {
+    if (document.querySelector('#subapp')) {
+      document.querySelector('#subapp').appendChild(el);
+      clearInterval(timer);
+      timer = null;
+    }
+  };
+
+  // 进来先执行一次查找，如果找到直接mount，否则轮询一下
+  callback();
+
+  timer && (timer = setInterval(callback, 100));
+
+  return el;
+
+  // return document.querySelector('.ant-layout-content #sub-module');
+  // return document.getElementById('root');
+}
 
 export const bootstrap = [reactLifecycles.bootstrap];
 // export const mount = [reactLifecycles.mount];
@@ -127,7 +141,7 @@ export async function mount(props) {
     // });
   }
 
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     console.log('sub1-app.mount.register_app', baseState);
 
     globalEventDistributor.dispatch({

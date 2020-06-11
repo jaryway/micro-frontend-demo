@@ -71,15 +71,17 @@
     "url-loader": "2.1.0",
     "webpack": "4.40.2",
     "webpack-dev-server": "3.2.1",
-    "webpack-manifest-plugin": "2.0.4",
+    "webpack-manifest-plugin": "2.2.0",
     "workbox-webpack-plugin": "4.3.1"
   },
   "scripts": {
     "start": "node scripts/start.js",
+    "start:micro": "node scripts/start.js --micro",
     "build": "node scripts/build.js",
     "build:micro": "node scripts/build.js --micro && yarn movefile",
     "test": "node scripts/test.js",
-    "movefile": "rimraf ../bootstrap/public/base-app && copyfiles -u 1 ./build/**/*.*  ../bootstrap/public/base-app"
+    "movefile": "rimraf ../bootstrap/public/base-app && copyfiles -u 1 ./build/**/*.*  ../bootstrap/public/base-app",
+    "webpack": "webpack --config config/webpack.config.micro.js"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -147,9 +149,9 @@
   "devDependencies": {
     "babel-plugin-import": "^1.12.2",
     "copyfiles": "^2.1.1",
-    "html-webpack-project-config-plugin": "^1.0.0",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
-    "rimraf": "^3.0.0"
+    "rimraf": "^3.0.0",
+    "webpack-cli": "^3.3.11"
   }
 }

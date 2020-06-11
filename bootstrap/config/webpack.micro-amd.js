@@ -10,18 +10,9 @@ const isEnvDevelopment = process.env.NODE_ENV === 'development';
 const isEnvProduction = process.env.NODE_ENV === 'production';
 
 const deployAppsProxy = {
-  '/base-app': { target: 'http://localhost:3801/', pathRewrite: { '^/base-app': '' } },
-  '/workflow-app': { target: 'http://localhost:3803/', pathRewrite: { '^/workflow-app': '' } },
-  '/knowledge-app': { target: 'http://localhost:3804/', pathRewrite: { '^/knowledge-app': '' } },
-  '/profile-app': { target: 'http://localhost:3805/', pathRewrite: { '^/profile-app': '' } },
-  '/punch-app': { target: 'http://localhost:3806/', pathRewrite: { '^/punch-app': '' } },
-  '/schedule-app': { target: 'http://localhost:3807/', pathRewrite: { '^/schedule-app': '' } },
-  '/notice-app': { target: 'http://localhost:3808/', pathRewrite: { '^/notice-app': '' } },
-  '/meeting-app': { target: 'http://localhost:3809/', pathRewrite: { '^/meeting-app': '' } },
-  '/box-app': { target: 'http://localhost:3810/', pathRewrite: { '^/box-app': '' } },
-  '/ssmp-app': { target: 'http://localhost:3811/', pathRewrite: { '^/ssmp-app': '' } },
-  '/homepage-app': { target: 'http://localhost:3812/', pathRewrite: { '^/homepage-app': '' } },
-  '/portal-app': { target: 'http://localhost:3813/', pathRewrite: { '^/portal-app': '' } },
+  '/app-base': { target: 'http://localhost:3701/', pathRewrite: { '^/app-base': '' } },
+  '/app-sub1': { target: 'http://localhost:3702/', pathRewrite: { '^/app-sub1': '' } },
+  '/app-sub2': { target: 'http://localhost:3703/', pathRewrite: { '^/app-sub2': '' } },
 };
 console.log(process.env.NODE_ENV);
 
@@ -41,9 +32,14 @@ module.exports = {
   },
   devServer: {
     contentBase: './public',
+    port: 3700,
+    historyApiFallback: {
+      // Paths with dots should still use the history fallback.
+      // See https://github.com/facebook/create-react-app/issues/387.
+      disableDotRule: true,
+    },
     proxy: {
       ...deployAppsProxy,
-      // '/base-app': { target: 'http://192.10.169.212:8111/' },
     },
   },
   resolve: {

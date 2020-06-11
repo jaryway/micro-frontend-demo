@@ -27,7 +27,7 @@ const menuList = [
 const { SubMenu } = Menu;
 
 function renderMenu(menus) {
-  return menus.map(item => {
+  return menus.map((item) => {
     const { key, icon, title, link, children } = item;
     if (children && children.length) {
       return (
@@ -141,7 +141,7 @@ function App({
           />
           <Button
             onClick={() => {
-              new Promise(resolve => {
+              new Promise((resolve) => {
                 setTimeout(() => {
                   resolve(menuList);
                   globalEventDistributor.dispatch({ type: 'ROOT_MENU_LIST', payload: menuList });
@@ -153,7 +153,7 @@ function App({
           </Button>
         </Header>
         <Content
-          id='maincontent'
+          id='subapp'
           style={{
             margin: '24px 16px',
             padding: 24,
@@ -162,10 +162,24 @@ function App({
           }}
         >
           <Switch>
-            <Route exact path='/' component={Home} />
             <Route path='/user' component={User} />
             <Route path='/about' component={About} />
+            <Route exact path='/' component={Home} />
             {/* <Route path='/*-app' component={SubApp} /> */}
+            <Route
+              path={'/*-app'}
+              render={({ location }) => {
+                console.log('sub-app', '命中子站点路由');
+
+                // globalEventDistributor.dispatch({
+                //   type: 'to',
+                //   path: location.pathname,
+                //   owner: 'base',
+                // });
+                // return <Spin spinning={} size='large' />;
+                return <div />;
+              }}
+            />
             {/* <Route render={() => <div id='maincontent'></div>} /> */}
           </Switch>
         </Content>
@@ -175,19 +189,14 @@ function App({
 }
 
 const withReducer = injectReducer([{ key: 'account', reducer: accountReducer }]);
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   console.log('base-app.state', state);
   return { loading: state.account.currentEmpLoading };
 };
 const mapDispatchToProps = {
   getCurrent: actions.account.getCurrent,
   // setCurrentMenuKey: payload => ({ type: 'REGISTER_APP', payload }),
-  registerApp: payload => ({ type: 'REGISTER_APP', payload }),
+  registerApp: (payload) => ({ type: 'REGISTER_APP', payload }),
   mountApp: () => ({ type: 'MOUNT_APP' }),
 };
-export default withReducer(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(App)
-);
+export default withReducer(connect(mapStateToProps, mapDispatchToProps)(App));
