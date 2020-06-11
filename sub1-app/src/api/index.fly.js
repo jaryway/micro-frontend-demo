@@ -4,7 +4,7 @@
 import Fly from 'flyio/dist/npm/fly';
 // import { Base64 } from "js-base64";
 import { notification } from 'antd';
-import { createHashHistory } from 'history';
+// import { createHashHistory } from 'history';
 import { getAccessTokenAsync, ShowMessage } from './utils';
 
 export {
@@ -14,7 +14,7 @@ export {
   getTokenInfoFromLocalStorage,
 } from './utils';
 
-const history = createHashHistory();
+// const history = createHashHistory();
 const showMessage = new ShowMessage();
 
 function createApi() {
@@ -56,11 +56,11 @@ export function goToLogin(noReturnURL) {
   // 已经在登录页面了
   if (returnurl.toLowerCase().indexOf('returnurl') > -1) return false;
 
-  history.push({
-    pathname: '/login',
-    search: noReturnURL ? '' : `returnurl=${encodeURIComponent(returnurl)}`,
-    //queryString.stringify({ returnurl })
-  });
+  // history.push({
+  //   pathname: '/login',
+  //   search: noReturnURL ? '' : `returnurl=${encodeURIComponent(returnurl)}`,
+  //   //queryString.stringify({ returnurl })
+  // });
 }
 
 export default createApi();
