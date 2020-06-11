@@ -5,8 +5,6 @@ import singleSpaReact from "single-spa-react";
 import RootComponent from "./root.component";
 import { storeInstance, history } from "./Store";
 
-console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxx", process.env.MICRO);
-
 if (process.env.NODE_ENV === "development" && !process.env.MICRO) {
   // 开发环境直接渲染
   ReactDOM.render(

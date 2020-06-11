@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Provider } from 'react-redux';
-import { Router, Switch } from 'react-router-dom';
-import { LocaleProvider } from 'antd';
-import zhCN from 'antd/lib/locale-provider/zh_CN';
-import { dynamic } from 'hsp-utils';
-import Authorized from './utils/Authorized';
+import React, { useState, useEffect } from "react";
+import { Provider } from "react-redux";
+import { Router, Switch } from "react-router-dom";
+import { LocaleProvider } from "antd";
+import zhCN from "antd/lib/locale-provider/zh_CN";
+import { dynamic } from "hsp-utils";
+import Authorized from "./utils/Authorized";
 
 const BasicLayout = dynamic(() => import(`./App`));
 // import BasicLayout from './App';
@@ -12,7 +12,7 @@ const { AuthorizedRoute } = Authorized;
 
 function RootComponent({ store, history, globalEventDistributor }) {
   const [state] = useState({ store, globalEventDistributor, history });
-  console.log('sub1-app.mount.into.RootComponent');
+  console.log("sub1-app.RootComponent", history);
   useEffect(() => {
     // console.log('sub1-app.history.useEffect');
     const unlisten = state.history.listen((location, action) => {
@@ -28,7 +28,7 @@ function RootComponent({ store, history, globalEventDistributor }) {
       // }
     });
     return () => {
-      console.log('sub1-app.history.unlisten');
+      // console.log("sub1-app.history.unlisten");
       // unlisten();
     };
   }, []);
@@ -41,8 +41,8 @@ function RootComponent({ store, history, globalEventDistributor }) {
         <Router history={history}>
           <Switch>
             <AuthorizedRoute
-              path='/'
-              render={props => <BasicLayout {...customProps} {...props} />}
+              path="/"
+              render={(props) => <BasicLayout {...customProps} {...props} />}
             />
           </Switch>
         </Router>
