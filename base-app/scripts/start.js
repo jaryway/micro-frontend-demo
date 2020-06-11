@@ -4,6 +4,11 @@
 process.env.BABEL_ENV = 'development';
 process.env.NODE_ENV = 'development';
 
+const argvs = process.argv.slice(2);
+const IS_MICRO = argvs.includes('--micro');
+process.env.MICRO = IS_MICRO;
+
+
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.
@@ -29,7 +34,9 @@ const {
 } = require('react-dev-utils/WebpackDevServerUtils');
 const openBrowser = require('react-dev-utils/openBrowser');
 const paths = require('../config/paths');
-const configFactory = require('../config/webpack.config');
+const configFactory = IS_MICRO
+  ? require('../config/webpack.config.micro')
+  : require('../config/webpack.config');
 const createDevServerConfig = require('../config/webpackDevServer.config');
 
 const useYarn = fs.existsSync(paths.yarnLockFile);

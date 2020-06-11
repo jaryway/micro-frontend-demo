@@ -8,7 +8,7 @@ const rename = require('gulp-rename');
 // const babel = require('gulp-babel');
 // const amdOptimize = require('amd-optimize');
 // const buildDir = 'build';
-const libDir = 'build/lib';
+const libDir = 'public/lib';
 // const esDir = 'build/es';
 
 var uglifyjs = require('uglify-es');
@@ -22,10 +22,10 @@ const concatSystemJS = isAMD => {
       // './src/lib.js'
       [
         // systemjs
-        './node_modules/systemjs/dist/system.js',
-        isAMD && './node_modules/systemjs/dist/extras/amd.js',
-        isAMD && './node_modules/systemjs/dist/extras/named-register.js',
-        './node_modules/systemjs/dist/extras/use-default.js',
+        './node_modules/systemjs/dist/system.min.js',
+        isAMD && './node_modules/systemjs/dist/extras/amd.min.js',
+        isAMD && './node_modules/systemjs/dist/extras/named-register.min.js',
+        './node_modules/systemjs/dist/extras/use-default.min.js',
         './node_modules/systemjs-css-extra/dist/css.min.js',
       ].filter(Boolean)
     )
@@ -52,7 +52,7 @@ const concatCommonVendors = isAMD => {
             './node_modules/redux/dist/redux.min.js',
             './node_modules/react-redux/dist/react-redux.min.js',
             './node_modules/redux-thunk/dist/redux-thunk.min.js',
-            './node_modules/redux-promise-middleware/dist/umd/redux-promise-middleware.min.js',
+            './node_modules/redux-promise-middleware/dist/redux-promise-middleware.min.js',
             './node_modules/single-spa/lib/umd/single-spa.min.js',
           ]
     )
@@ -87,7 +87,12 @@ gulp.task('concat-vendors', done => {
 
 gulp.task(
   'default',
-  gulp.parallel('concat-systemjs-amd', 'concat-vendors-amd', 'concat-systemjs', 'concat-vendors')
+  gulp.series(
+    'concat-systemjs-amd',
+    'concat-vendors-amd'
+    //  'concat-systemjs',
+    //  'concat-vendors'
+  )
 );
 
 module.exports = gulp;

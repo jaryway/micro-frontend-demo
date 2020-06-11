@@ -5,7 +5,9 @@ import singleSpaReact from 'single-spa-react';
 import RootComponent from './root.component';
 import { storeInstance, history } from './Store';
 
-if (process.env.NODE_ENV === 'development') {
+console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+
+if (process.env.NODE_ENV === 'development' && !process.env.MICRO) {
   // 开发环境直接渲染
   ReactDOM.render(
     <RootComponent
@@ -20,7 +22,7 @@ if (process.env.NODE_ENV === 'development') {
 const reactLifecycles = singleSpaReact({
   React,
   ReactDOM,
-  rootComponent: props => {
+  rootComponent: (props) => {
     return (
       <RootComponent
         history={props.store.history}
@@ -34,10 +36,10 @@ const reactLifecycles = singleSpaReact({
 });
 
 function domElementGetter() {
-  let el = document.getElementById('sub-app-page');
+  let el = document.getElementById('sub2-app-page');
   if (!el) {
     el = document.createElement('div');
-    el.id = 'sub-app-page';
+    el.id = 'sub2-app-page';
   }
 
   let timer = 1;
@@ -56,9 +58,6 @@ function domElementGetter() {
   timer && (timer = setInterval(callback, 100));
 
   return el;
-
-  // return document.querySelector('.ant-layout-content #sub-module');
-  // return document.getElementById('root');
 }
 
 export const bootstrap = [reactLifecycles.bootstrap];

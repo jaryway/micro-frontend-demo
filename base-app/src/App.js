@@ -2,10 +2,11 @@ import './App.css';
 import React, { useState, useCallback, useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Layout, Menu, Icon, Spin, message } from 'antd';
+import { Layout, Menu, Icon, Spin, message, Button } from 'antd';
 import { dynamic, injectReducer } from 'hsp-utils';
 
 import actions from '@/_global/actions';
+import appReducer from '@/_global/reducers/app';
 import accountReducer from '@/_global/reducers/account';
 
 const { Header, Sider, Content } = Layout;
@@ -26,17 +27,17 @@ const menuList = [
 const { SubMenu } = Menu;
 
 function renderMenu(menus) {
-  return menus.map(item => {
+  return menus.map((item) => {
     const { key, icon, title, link, children } = item;
     if (children && children.length) {
       return (
         <SubMenu
           key={key}
           title={
-            <span>
+            <>
               <Icon type='mail' />
               <span>{title}</span>
-            </span>
+            </>
           }
         >
           {renderMenu(children)}
@@ -65,6 +66,7 @@ function Home() {
 }
 
 function SubApp() {
+  console.log('match-subapp');
   return (
     <div id='subapp'>
       <h2>SubApp</h2>
@@ -72,12 +74,29 @@ function SubApp() {
   );
 }
 
-function App({ history, globalEventDistributor, getCurrent, loading, ...rest }) {
+function App({
+  history,
+  globalEventDistributor,
+  getCurrent,
+  setCurrentMenuKey,
+  loading,
+  mountApp,
+  registerApp,
+  ...rest
+}) {
   const [collapsed, setCollapsed] = useState(false);
-  // console.log('rest', rest);
+  console.log('rest', rest);
   useEffect(() => {
+    // registerApp({
+    //   mount: () => {
+    //     console.log('portal-app.first.mount');
+    //     // resolve(reactLifecycles.mount(props));
+    //   },
+    // });
+
     getCurrent().then(() => {
-      globalEventDistributor.dispatch({ type: 'DID_MOUNT' });
+      // globalEventDistributor
+      mountApp();
     });
   }, []);
 
@@ -85,8 +104,9 @@ function App({ history, globalEventDistributor, getCurrent, loading, ...rest }) 
     setCollapsed(!collapsed);
   }, [collapsed]);
 
-  const onMenuClick = useCallback(link => {
+  const onMenuClick = useCallback((key, link) => {
     history.push(link);
+    globalEventDistributor.dispatch({ type: 'CHANGE_ROOT_ACTIVE_MENU_KEY', payload: key });
   }, []);
 
   if (loading)
@@ -104,8 +124,9 @@ function App({ history, globalEventDistributor, getCurrent, loading, ...rest }) 
           theme='light'
           mode='inline'
           defaultSelectedKeys={['k1']}
-          onClick={({ item }) => {
-            onMenuClick(item.props['link']);
+          onClick={({ key, item }) => {
+            // console.log('onMenuClick', key, item);
+            onMenuClick(key, item.props['link']);
           }}
         >
           {renderMenu(menuList)}
@@ -118,8 +139,21 @@ function App({ history, globalEventDistributor, getCurrent, loading, ...rest }) 
             type={collapsed ? 'menu-unfold' : 'menu-fold'}
             onClick={toggle}
           />
+          <Button
+            onClick={() => {
+              new Promise((resolve) => {
+                setTimeout(() => {
+                  resolve(menuList);
+                  globalEventDistributor.dispatch({ type: 'ROOT_MENU_LIST', payload: menuList });
+                }, 1500);
+              });
+            }}
+          >
+            Click
+          </Button>
         </Header>
         <Content
+          id='subapp'
           style={{
             margin: '24px 16px',
             padding: 24,
@@ -128,10 +162,25 @@ function App({ history, globalEventDistributor, getCurrent, loading, ...rest }) 
           }}
         >
           <Switch>
-            <Route exact path='/' component={Home} />
             <Route path='/user' component={User} />
             <Route path='/about' component={About} />
-            <Route path='/*-app' component={SubApp} />
+            <Route exact path='/' component={Home} />
+            {/* <Route path='/*-app' component={SubApp} /> */}
+            <Route
+              path={'/*-app'}
+              render={({ location }) => {
+                console.log('sub-app', '命中子站点路由');
+
+                // globalEventDistributor.dispatch({
+                //   type: 'to',
+                //   path: location.pathname,
+                //   owner: 'base',
+                // });
+                // return <Spin spinning={} size='large' />;
+                return <div />;
+              }}
+            />
+            {/* <Route render={() => <div id='maincontent'></div>} /> */}
           </Switch>
         </Content>
       </Layout>
@@ -140,19 +189,14 @@ function App({ history, globalEventDistributor, getCurrent, loading, ...rest }) 
 }
 
 const withReducer = injectReducer([{ key: 'account', reducer: accountReducer }]);
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   console.log('base-app.state', state);
   return { loading: state.account.currentEmpLoading };
 };
-const mapDispatchToProps = { getCurrent: actions.account.getCurrent };
-// (_dispatch, { globalEventDistributor }) => {
-//   return { getCurrent: () => globalEventDistributor.dispatch(actions.account.getCurrent()) };
-// };
-
-export default withReducer(
-  connect(
-    mapStateToProps,
-    // actions.account
-    mapDispatchToProps
-  )(App)
-);
+const mapDispatchToProps = {
+  getCurrent: actions.account.getCurrent,
+  // setCurrentMenuKey: payload => ({ type: 'REGISTER_APP', payload }),
+  registerApp: (payload) => ({ type: 'REGISTER_APP', payload }),
+  mountApp: () => ({ type: 'MOUNT_APP' }),
+};
+export default withReducer(connect(mapStateToProps, mapDispatchToProps)(App));

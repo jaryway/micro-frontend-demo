@@ -1,46 +1,58 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>MICRO-FRONTEND-DEMO</title>
-    <% htmlWebpackPlugin.files.css.forEach(function(item,i){%>
-    <style><%= compilation.assets[item].source() %></style>
-    <% }) %>
-  </head>
-  <body>
-    <div id="root"></div>
-
-
-
-    <script src="/libs/less.min.js"></script>
-    <script src="/lib/amd/system.min.js"></script>
-    <script src="/lib/amd/common-vendors.min.js"></script>
-    <!-- <script type="systemjs-importmap" src="/importmap.json"></script> -->
-    <!-- <script src="https://cdn.bootcss.com/react/16.8.6/umd/react.development.js"></script> -->
-    <!-- <script src="https://cdn.bootcss.com/react-dom/16.8.6/umd/react-dom.development.js"></script> -->
-    <!-- <script>
-      System.import('https://cdn.bootcss.com/jquery/3.2.1/jquery.js').then(m =>
-        console.log(m, 'dssd')
-      );
-    </script> -->
-    <script>
-
-    window.CONFIG={
-      API_BASE_URL:"http://192.10.169.212:31111",
-      IOFFICE_URL:"", // _yj
-      LOGIN_PAGE:"",
-      CUSTOM_ICON_NAMES:["eye-close","patient-feedback","complaint","doctor-file","ibook","my-profile","my-schedule","cus-service","plugin","upgrade","feedback","content-p","folder-2","text","content","leader","division","legalentity","group","excel","app","isv","more","more-h","flow","signature","hr","res-report","fill-form","notice","finish","folder-open-1","ques","tran-data","add","person-add","info-manage","bus-manage","email","fold","unfold","word","zip","send","import","pack-down","alarm","image","link-ext","quote","flower","select","checkbox","radio","text-input","textarea","replay","open-eye","closed-eye","tick","exit-fullscreen","full-screen","seal","shut-down","cancel","handing","location","inventory","meeting","custom-info-manage","news-notices","bbs","doc-manage","setting-1"],
-      ANDROID_APP_URL:'http://120.79.129.67:7777/ssmpHelper_v1.0.1_legu.apk',
-      IOS_APP_URL:'https://apps.apple.com/cn/app/%E8%88%B9%E6%B5%B7%E5%8A%A9%E6%89%8B/id1473250852'
-    };
-    </script>
-
-  <% htmlWebpackPlugin.files.js.forEach(function(item,i){%>
-  <script><%= compilation.assets[item].source() %></script>
-  <% }) %>
-  <script>
-      System.import('bootstrap').then(m => console.log(m, 'bootstrap'));
-  </script>
-  </body>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<%= htmlWebpackPlugin.files.manifest %>
+<title><%= htmlWebpackPlugin.options.title %>-控制台</title>
+<% htmlWebpackPlugin.files.css.forEach(function(item,i){%>
+<style><%= compilation.assets[item.substr(htmlWebpackPlugin.files.publicPath.length)].source() %></style>
+<% }) %>
+</head>
+<script>
+window.CONFIG={
+  REGISTER_TYPE:<%=process.env.NODE_ENV==='development'?'"split"':'"merge"'%>, // split|merge
+};
+</script>
+<script src="/libs/qrcode.min.js?v=100"></script>
+<body style="margin:0;padding:0">
+<!-- <link rel="stylesheet/less" type="text/css" href="/color.less" /> -->
+<script>
+  window.deployApps=[
+    'app-base',
+    'app-sub1',
+    'app-sub2',
+  ];
+  window.less = { async: false, env: 'production' }; </script>
+<script type="text/javascript" src="/libs/less.min.js"></script>
+<div id="root"><%= htmlWebpackPlugin.options.loading.html %></div>
+<script src="/libs/systemjs/system.min.js"></script>
+<script type="systemjs-importmap">
+  {
+    "imports": {
+      "react": "/libs/umd/react.production.min.js",
+      "react-dom": "/libs/umd/react-dom.production.min.js",
+      "react-router-dom":"/libs/umd/react-router-dom.min.js",
+      "prop-types":"/libs/umd/prop-types.min.js",
+      "redux":"/libs/umd/redux.min.js",
+      "redux-thunk":"/libs/umd/redux-thunk.min.js",
+      "react-redux":"/libs/umd/react-redux.min.js",
+      "redux-promise-middleware":"/libs/umd/redux-promise-middleware.min.js",
+      "single-spa":"/libs/umd/single-spa.min.js",
+      "single-spa-react":"/libs/umd/single-spa-react.min.js",
+      "history":"/libs/umd/history.min.js"
+    }
+  }
+</script>
+<script src="/libs/systemjs/extras/amd.min.js"></script>
+<script src="/libs/systemjs/extras/use-default.min.js"></script>
+<!-- <script src="/libs/systemjs/6.3.2/extras/named-register.min.js"></script>-->
+<script src="/libs/systemjs/extras/css.min.js"></script>
+<!-- <script type="systemjs-importmap" src="%PUBLIC_URL%/importmap.json"></script> -->
+<script>
+<% htmlWebpackPlugin.files.js.forEach(function(item,i){%>
+ System.import('<%= item %>');
+<% }) %>
+</script>
+</body>
 </html>

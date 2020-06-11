@@ -13,7 +13,7 @@ if (!NODE_ENV) {
   throw new Error('The NODE_ENV environment variable is required but was not specified.');
 }
 
-console.log('.MICRO', Object.prototype.toString.call(process.env.MICRO));
+// console.log('.MICRO', Object.prototype.toString.call(process.env.MICRO));
 
 // https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
 var dotenvFiles = [

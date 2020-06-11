@@ -1,5 +1,5 @@
-import { createStore, combineReducers } from 'redux';
-import { createHashHistory as createHistory } from 'history';
+import { createStore, combineReducers, compose } from 'redux';
+import { createBrowserHistory as createHistory } from 'history';
 // import createHistory from 'history/createHashHistory';
 export const history = createHistory();
 
@@ -20,6 +20,29 @@ function to(state = initialState, action) {
 
   return { ...state, path: action.path };
 }
-const globalReducers = { namespace: () => 'sub1-app', render, to };
-export const storeInstance = createStore(combineReducers(globalReducers));
+function _root(state = { rootActiveMenuKey: '' }, action) {
+  if (action.type === 'CHANGE_ROOT_ACTIVE_MENU_KEY') {
+    return { ...state, rootActiveMenuKey: action.payload };
+  }
+
+  return state;
+}
+
+const globalReducers = { namespace: () => 'sub2', render, to, _root };
+const createReducer = (asyncReducers) => {
+  console.log('sub2-app.createReducer', asyncReducers);
+  const appReducer = combineReducers(asyncReducers);
+  return (state, action) => {
+    console.log('sub2-app.createReducer.1', action, state);
+    // 把这个 app 的 state 设为初始值，依赖 hsp-utils > 1.3
+    if (action.type === 'RESET_APP') {
+      console.log('sub2-app.createReducer.RESET_APP', action);
+      state = undefined;
+    }
+    return appReducer(state, action);
+  };
+};
+
+export const storeInstance = createStore(createReducer(globalReducers), {});
 storeInstance.globalReducers = globalReducers;
+storeInstance.createReducer = createReducer;

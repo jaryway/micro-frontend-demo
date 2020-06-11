@@ -5,7 +5,9 @@ import singleSpaReact from 'single-spa-react';
 import RootComponent from './root.component';
 import { storeInstance, history } from './Store';
 
-if (process.env.NODE_ENV === 'development') {
+// console.log('xxxxxxxx', 445);
+
+if (process.env.NODE_ENV === 'development' && !process.env.MICRO) {
   // 开发环境直接渲染
   ReactDOM.render(
     <RootComponent
@@ -17,28 +19,75 @@ if (process.env.NODE_ENV === 'development') {
   );
 }
 
+function ensureMount(cb) {
+  let timer = 1;
+  console.log('sub1-app.mount.ensureMount');
+  const callback = () => {
+    if (document.querySelector('#subapp')) {
+      console.log('sub1-app.mount.ensureMount.find.subapp');
+      clearInterval(timer);
+      timer = null;
+      cb();
+    }
+  };
+
+  // 进来先执行一次查找，如果找到直接mount，否则轮询一下
+  callback();
+
+  timer && (timer = setInterval(callback, 1));
+}
+
 const reactLifecycles = singleSpaReact({
   React,
   ReactDOM,
-  rootComponent: props => {
-    return (
-      <RootComponent
-        history={props.store.history}
-        store={props.store.storeInstance}
-        globalEventDistributor={props.globalEventDistributor}
-      />
-    );
+  // rootComponent: props => {
+  //   console.log('sub1-app.rootComponent', props);
+  //   return (
+  //     <RootComponent
+  //       history={props.store.history}
+  //       store={props.store.storeInstance}
+  //       globalEventDistributor={props.globalEventDistributor}
+  //     />
+  //   );
+  // },
+  loadRootComponent: () => {
+    console.log('sub1-app.mount.loadRootComponent.initial');
+    return new Promise((resolve) => {
+      ensureMount(() =>
+        resolve((props) => {
+          console.log('sub1-app.mount.loadRootComponent.appendChild', props);
+          return (
+            <RootComponent
+              history={props.store.history}
+              store={props.store.storeInstance}
+              globalEventDistributor={props.globalEventDistributor}
+            />
+          );
+        })
+      );
+    });
   },
   // 可能会有加载顺序的问题
   domElementGetter,
 });
 
+// function domElementGetter() {
+//   // Make sure there is a div for us to render into
+//   let el = document.getElementById('sub1-app');
+//   if (!el) {
+//     el = document.createElement('div');
+//     el.id = 'sub1-app';
+//     document.getElementById('subapp').appendChild(el);
+//   }
+
+//   return el;
+// }
+
 function domElementGetter() {
-  console.log('sub1-app.domElementGetter');
-  let el = document.getElementById('sub-app-page');
+  let el = document.getElementById('sub1-app-page');
   if (!el) {
     el = document.createElement('div');
-    el.id = 'sub-app-page';
+    el.id = 'sub1-app-page';
   }
 
   let timer = 1;
@@ -68,7 +117,7 @@ export async function mount(props) {
   const { globalEventDistributor } = props;
   const { base: baseState } = globalEventDistributor.getState();
   const { account } = baseState;
-  console.log('sub1-app.mount', baseState);
+  console.log('sub1-app.mount.initital', baseState);
   /* Note：
    * 这里要确保 mount 的时候 account 信息已经加载好
    */
@@ -77,15 +126,29 @@ export async function mount(props) {
   // 否则 dispatch 一下，会在 currentEmp 加载好后执行mount
   const baseAppIsOk = account && account.currentEmpLoading === false;
 
-  if (baseAppIsOk) return reactLifecycles.mount(props);
+  if (baseAppIsOk) {
+    console.log('sub1-app.mount.mount_app1', baseState);
+    return reactLifecycles.mount(props);
 
-  return new Promise(resolve => {
-    console.log('sub1-app.mount1', baseState);
+    // return new Promise(resolve => {
+    //   console.log('sub1-app.mount.waitting_doc', props);
+    //   setTimeout(() => {
+    //     resolve(reactLifecycles.mount(props));
+    //   }, 3000);
+    //   // ensureMount(() => {
+    //   //   resolve(reactLifecycles.mount(props));
+    //   // });
+    // });
+  }
+
+  return new Promise((resolve) => {
+    console.log('sub1-app.mount.register_app', baseState);
+
     globalEventDistributor.dispatch({
-      type: 'WILL_MOUNT',
+      type: 'REGISTER_APP',
       payload: {
         mount: () => {
-          console.log('sub1-app.mount2', baseState);
+          console.log('sub1-app.mount.mount_app2', baseState);
           resolve(reactLifecycles.mount(props));
         },
       },

@@ -17,16 +17,16 @@ function RootComponent({ store, history, globalEventDistributor, ...rest }) {
         globalEventDistributor.dispatch({
           type: 'to',
           path: location.pathname,
-          owner: 'sub1-app',
+          owner: 'sub2-app',
         });
         const globalState = store.getState();
-        console.log('history.listen-sub1-app ', globalState);
+        console.log('history.listen-sub2-app ', globalState);
       }
     });
   }, []);
 
   const customProps = { globalEventDistributor: state.globalEventDistributor };
-  console.log('sub1-app-store', globalEventDistributor.getState(), store.getState());
+  console.log('sub2-app-store', globalEventDistributor.getState(), store.getState());
   return (
     <Provider store={state.store}>
       {/* <BasicLayout {...customProps} /> */}
