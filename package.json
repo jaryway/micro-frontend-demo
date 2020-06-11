@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/jaryway/micro-frontend-demo#readme",
   "dependencies": {
+    "history": "^4.10.1",
     "hsp-utils": "^1.1.6"
   }
 }
