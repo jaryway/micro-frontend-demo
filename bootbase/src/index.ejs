@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<%= htmlWebpackPlugin.files.manifest %>
+<title><%= htmlWebpackPlugin.options.title %>-控制台</title>
+<% htmlWebpackPlugin.files.css.forEach(function(item,i){%>
+<style><%= compilation.assets[item.substr(htmlWebpackPlugin.files.publicPath.length)].source() %></style>
+<% }) %>
+</head>
+<script>
+window.CONFIG={
+  REGISTER_TYPE:<%=process.env.NODE_ENV==='development'?'"split"':'"merge"'%>, // split|merge
+};
+</script>
+<script src="/libs/qrcode.min.js?v=100"></script>
+<body style="margin:0;padding:0">
+<!-- <link rel="stylesheet/less" type="text/css" href="/color.less" /> -->
+<script>
+  window.deployApps=[
+    'app-base',
+    'app-sub1',
+    'app-sub2',
+  ];
+  window.less = { async: false, env: 'production' }; </script>
+<script type="text/javascript" src="/libs/less.min.js"></script>
+<div id="root"><%= htmlWebpackPlugin.options.loading.html %></div>
+<script src="/libs/systemjs/system.min.js"></script>
+<script type="systemjs-importmap">
+  {
+    "imports": {
+      "react": "/libs/umd/react.production.min.js",
+      "react-dom": "/libs/umd/react-dom.production.min.js",
+      "react-router-dom":"/libs/umd/react-router-dom.min.js",
+      "prop-types":"/libs/umd/prop-types.min.js",
+      "redux":"/libs/umd/redux.min.js",
+      "redux-thunk":"/libs/umd/redux-thunk.min.js",
+      "react-redux":"/libs/umd/react-redux.min.js",
+      "redux-promise-middleware":"/libs/umd/redux-promise-middleware.min.js",
+      "single-spa":"/libs/umd/single-spa.min.js",
+      "single-spa-react":"/libs/umd/single-spa-react.min.js",
+      "history":"/libs/umd/history.min.js"
+    }
+  }
+</script>
+<script src="/libs/systemjs/extras/amd.min.js"></script>
+<script src="/libs/systemjs/extras/use-default.min.js"></script>
+<!-- <script src="/libs/systemjs/6.3.2/extras/named-register.min.js"></script>-->
+<script src="/libs/systemjs/extras/css.min.js"></script>
+<!-- <script type="systemjs-importmap" src="%PUBLIC_URL%/importmap.json"></script> -->
+<script>
+<% htmlWebpackPlugin.files.js.forEach(function(item,i){%>
+ System.import('<%= item %>');
+<% }) %>
+</script>
+</body>
+</html>

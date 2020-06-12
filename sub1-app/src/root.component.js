@@ -12,7 +12,7 @@ const { AuthorizedRoute } = Authorized;
 
 function RootComponent({ store, history, globalEventDistributor }) {
   const [state] = useState({ store, globalEventDistributor, history });
-  console.log("sub1-app.RootComponent", history);
+  console.log("sub1-app.RootComponent-listen1", history);
   useEffect(() => {
     // console.log('sub1-app.history.useEffect');
     const unlisten = state.history.listen((location, action) => {
