@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { Provider } from "react-redux";
-import { Router, Switch } from "react-router-dom";
-import Authorized from "./utils/Authorized";
-import BasicLayout from "./App";
-import "./App.css";
+import React, { useState, useEffect } from 'react';
+import { Provider } from 'react-redux';
+import { Router, Switch } from 'react-router-dom';
+import Authorized from './utils/Authorized';
+import BasicLayout from './App';
+import './App.css';
 
 const { AuthorizedRoute } = Authorized;
 
 function RootComponent({ store, history, globalEventDistributor, ...rest }) {
   const [state, setState] = useState({ store, globalEventDistributor });
-  console.log("sub2-app.RootComponent", history);
+  console.log('sub2-app.RootComponent', history);
 
   useEffect(() => {
     // console.log("history", history);
@@ -34,7 +34,7 @@ function RootComponent({ store, history, globalEventDistributor, ...rest }) {
       <Router history={history}>
         <Switch>
           <AuthorizedRoute
-            path="/"
+            path='/'
             render={(props) => <BasicLayout {...customProps} {...props} />}
           />
         </Switch>

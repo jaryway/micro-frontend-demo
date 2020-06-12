@@ -11,6 +11,7 @@
 </head>
 <script>
 window.CONFIG={
+  API_BASE_URL:"http://192.10.169.212:31111",
   REGISTER_TYPE:<%=process.env.NODE_ENV==='development'?'"split"':'"merge"'%>, // split|merge
 };
 </script>
@@ -19,13 +20,13 @@ window.CONFIG={
 <!-- <link rel="stylesheet/less" type="text/css" href="/color.less" /> -->
 <script>
   window.deployApps=[
-    'app-base',
+    'app-homepage',
     'app-sub1',
     'app-sub2',
   ];
   window.less = { async: false, env: 'production' }; </script>
 <script type="text/javascript" src="/libs/less.min.js"></script>
-<div id="root"><%= htmlWebpackPlugin.options.loading.html %></div>
+<div id="root"><%= htmlWebpackPlugin.options.loading %></div>
 <script src="/libs/systemjs/system.min.js"></script>
 <script type="systemjs-importmap">
   {

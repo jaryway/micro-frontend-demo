@@ -1,0 +1,142 @@
+pipeline{
+    agent any
+    parameters{
+        choice(name: "_BUILD_ENV",choices: ['192.10.169.201','192.10.169.212','192.10.169.224'],description: "选择构建环境")
+    }
+    tools{
+        nodejs 'nodejs'
+    }
+    environment{
+        _deployEnv = "${_BUILD_ENV}"
+        _devCredsId = "201"
+        _testCredsId = "212"
+        _prodCredsId = "224"
+        _devBuildPath = "/server/wwwroot/his-web/"
+        _testBuildPath = "/server/wwwroot/his-web/"
+        _prodBuildPath = "/server/wwwroot/his-web/"
+
+    }
+    stages{
+        stage('Build'){
+            steps{
+                sh "npm config set registry http://192.10.169.216:4873/"
+                sh "npm install"
+                sh "npm run build:micro"
+            }
+        }
+
+        stage('Tar File'){
+            environment{
+                BITBUCKET_CREDS = credentials("${_devCredsId}")
+            }
+            steps{
+                script{
+                    stage('Remote localhost'){
+                        def remote= [:]
+                        remote.name="root"
+                        remote.host="192.10.169.201"
+                        remote.user="${BITBUCKET_CREDS_USR}"
+                        remote.password="${BITBUCKET_CREDS_PSW}"
+                        remote.allowAnyHosts= true
+                        sshCommand remote: remote, command: "cd ${env.WORKSPACE}/build && tar -cvf ../${env.JOB_NAME}.tar.gz ./*"
+                    }
+                }
+            }
+        }
+
+        stage('Deploy_Dev'){
+            when{
+                environment name: '_deployEnv' ,value: '192.10.169.201'
+            }
+            environment{
+                BITBUCKET_CREDS = credentials("${_devCredsId}")
+            }
+            steps{
+                script{
+                    stage('Remote Update'){
+                        def remote= [:]
+                        remote.name="root"
+                        remote.host="${_deployEnv}"
+                        remote.user="${BITBUCKET_CREDS_USR}"
+                        remote.password="${BITBUCKET_CREDS_PSW}"
+                        remote.allowAnyHosts= true
+                        sshCommand remote: remote, command: "[ -d ${_devBuildPath}/${env.JOB_NAME}/ ] && `echo '1 < 2'` || mkdir -p ${_devBuildPath}/${env.JOB_NAME}/"
+                        sshCommand remote: remote, command: "rm -rf ${_devBuildPath}/${env.JOB_NAME}/*"
+                        sshCommand remote: remote, command: "\\cp -rf ${env.WORKSPACE}/build/* ${_devBuildPath}/${env.JOB_NAME}"
+                    }
+                }
+            }
+        }
+
+        stage('Deploy_Test'){
+            when{
+                environment name: '_deployEnv' ,value: '192.10.169.212'
+            }
+            environment{
+                BITBUCKET_CREDS = credentials("${_testCredsId}")
+            }
+            steps{
+                sh "sshpass -p ${BITBUCKET_CREDS_PSW} scp ${env.WORKSPACE}/${env.JOB_NAME}.tar.gz ${BITBUCKET_CREDS_USR}@${_deployEnv}:${_testBuildPath}"
+                script{
+                    stage('Remote Update'){
+                        def remote= [:]
+                        remote.name="root"
+                        remote.host="${_deployEnv}"
+                        remote.user="${BITBUCKET_CREDS_USR}"
+                        remote.password="${BITBUCKET_CREDS_PSW}"
+                        remote.allowAnyHosts= true
+                        sshCommand remote: remote, command: "[ -d ${_testBuildPath}/${env.JOB_NAME}/ ] && `echo '1 < 2'` || mkdir -p ${_testBuildPath}/${env.JOB_NAME}/"
+                        sshCommand remote: remote, command: "rm -rf ${_testBuildPath}/${env.JOB_NAME}/*"
+                        sshCommand remote: remote, command: "tar -xvf ${_testBuildPath}/${env.JOB_NAME}.tar.gz -C ${_testBuildPath}/${env.JOB_NAME} && rm -rf ${_testBuildPath}/${env.JOB_NAME}.tar.gz"
+                    }
+                }
+            }
+        }
+
+        stage('Deploy_Prod'){
+            when{
+                environment name: '_deployEnv' ,value: '192.10.169.224'
+            }
+            environment{
+                BITBUCKET_CREDS = credentials("${_prodCredsId}")
+            }
+            steps{
+                sh "sshpass -p ${BITBUCKET_CREDS_PSW} scp ${env.WORKSPACE}/${env.JOB_NAME}.tar.gz ${BITBUCKET_CREDS_USR}@${_deployEnv}:${_prodBuildPath}"
+                script{
+                    stage('Remote Update'){
+                        def remote= [:]
+                        remote.name="root"
+                        remote.host="${_deployEnv}"
+                        remote.user="${BITBUCKET_CREDS_USR}"
+                        remote.password="${BITBUCKET_CREDS_PSW}"
+                        remote.allowAnyHosts= true
+                        sshCommand remote: remote, command: "[ -d ${_prodBuildPath}/${env.JOB_NAME}/ ] && `echo '1 < 2'` || mkdir -p ${_prodBuildPath}/${env.JOB_NAME}/"
+                        sshCommand remote: remote, command: "rm -rf ${_prodBuildPath}/${env.JOB_NAME}/*"
+                        sshCommand remote: remote, command: "tar -xvf ${_prodBuildPath}/${env.JOB_NAME}.tar.gz -C ${_prodBuildPath}/${env.JOB_NAME} && rm -rf ${_prodBuildPath}/${env.JOB_NAME}.tar.gz"
+                    }
+                }
+            }
+        }
+
+        stage('Remove Tar'){
+            environment{
+                BITBUCKET_CREDS = credentials("${_devCredsId}")
+            }
+            steps{
+                script{
+                    stage('Remote localhost'){
+                        def remote= [:]
+                        remote.name="root"
+                        remote.host="192.10.169.201"
+                        remote.user="${BITBUCKET_CREDS_USR}"
+                        remote.password="${BITBUCKET_CREDS_PSW}"
+                        remote.allowAnyHosts= true
+                        sshCommand remote: remote, command: "rm -rf ${env.WORKSPACE}/${env.JOB_NAME}.tar.gz"
+                    }
+                }
+            }
+        }
+
+    }
+
+}

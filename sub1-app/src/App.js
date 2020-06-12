@@ -1,6 +1,6 @@
 // import './App.css';
 import React, { useEffect } from "react";
-import { Route, Link } from "react-router-dom";
+import { Route, Link, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import { Button, Table, Card, Spin } from "antd";
 // import Loadable from 'react-loadable';
@@ -62,16 +62,24 @@ function App({ getCurrent, loading = false }) {
       SUB1-APP
       <ul>
         <li>
+          <Link to="/">wwwroot</Link>
+        </li>
+        <li>
           <Link to="/sub1-app">root</Link>
         </li>
         <li>
-          <Link to="/sub1-app/home">Home</Link>
+          <Link to="/sub1-app/home" replace>
+            Home
+          </Link>
         </li>
         <li>
           <Link to="/sub2-app/home">sub2-Home</Link>
         </li>
         <li>
           <Link to="/sub3-app">sub3</Link>
+        </li>
+        <li>
+          <Link to="/homepage-app">home page</Link>
         </li>
       </ul>
       <p>{name}</p>
@@ -81,7 +89,16 @@ function App({ getCurrent, loading = false }) {
         </Button>
       </div>
       <Table dataSource={dataSource} columns={columns} />
-      <Route path="/sub1-app/home" component={Home} />
+      <Switch>
+        <Route
+          path="/sub1-app/home"
+          render={(props) => {
+            console.log("render/sub1-app/home");
+
+            return <Home {...props} />;
+          }}
+        />
+      </Switch>
     </Card>
   );
 }
@@ -104,7 +121,7 @@ const mapDispatchToProps = (dispatch, { globalEventDistributor }) => {
       // 否则，发起 http 请求 account 信息
       return dispatch(
         actions.account.getCurrent(
-          process.env.MICRO ? baseState.account.currentEmp : undefined
+          process.env.MICRO ? baseState._root.currentEmp : undefined
         )
       );
     },

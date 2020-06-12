@@ -1,21 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Provider } from "react-redux";
 import { Router, Switch } from "react-router-dom";
+import { UseAPIProvider } from "@umijs/use-request";
+import { request4useRequest } from "api";
+
 import Authorized from "./utils/Authorized";
 import BasicLayout from "./App";
-// import Store from './Store';
+import { history, storeInstance as store } from "./Store";
+import { GlobalEventDistributor } from "./utils/GlobalEventDistributor";
+
+import SecurityLayout from "./layouts/SecurityLayout";
+
 // import logo from './logo.svg';
 import "./App.css";
 
 const { AuthorizedRoute } = Authorized;
+const globalEventDistributor = new GlobalEventDistributor();
+globalEventDistributor.registerStore(store);
 
-function RootComponent({ store, history, globalEventDistributor, ...rest }) {
-  // const [state, setState] = useState({
-  //   store,
-  //   globalEventDistributor,
-  //   history,
-  // });
-
+function RootComponent({ ...rest }) {
   console.log("base-app.RootComponent", history);
 
   useEffect(() => {
@@ -24,11 +27,11 @@ function RootComponent({ store, history, globalEventDistributor, ...rest }) {
       console.log("base-app.RootComponent-listen1", location, action, history);
       // console.log("base-app.history.listen", location, action);
       if (action === "PUSH") {
-        // globalEventDistributor.dispatch({
-        //   type: "to",
-        //   path: location.pathname,
-        //   owner: "base",
-        // });
+        globalEventDistributor.dispatch({
+          type: "to",
+          path: location.pathname,
+          owner: "base",
+        });
       }
     });
     return () => {
@@ -37,19 +40,24 @@ function RootComponent({ store, history, globalEventDistributor, ...rest }) {
     };
   }, []);
 
-  const customProps = { globalEventDistributor: globalEventDistributor };
+  const customProps = { globalEventDistributor };
   // console.log('base-app-store', store.getState());
   return (
     <Provider store={store}>
-      {/* <BasicLayout {...customProps} /> */}
-      <Router history={history}>
-        <Switch>
-          <AuthorizedRoute
-            path="/"
-            render={(props) => <BasicLayout {...customProps} {...props} />}
-          />
-        </Switch>
-      </Router>
+      <UseAPIProvider value={{ requestMethod: request4useRequest }}>
+        <Router history={history}>
+          <Switch>
+            <AuthorizedRoute
+              path="/"
+              render={(props) => (
+                <SecurityLayout {...customProps} {...props}>
+                  <BasicLayout {...customProps} {...props} />
+                </SecurityLayout>
+              )}
+            />
+          </Switch>
+        </Router>
+      </UseAPIProvider>
     </Provider>
   );
 }

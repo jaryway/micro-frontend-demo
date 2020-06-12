@@ -1,13 +1,13 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import singleSpaReact from 'single-spa-react';
+import React from "react";
+import ReactDOM from "react-dom";
+import singleSpaReact from "single-spa-react";
 // import * as serviceWorker from './serviceWorker';
-import RootComponent from './root.component';
-import { storeInstance, history } from './Store';
+import RootComponent from "./root.component";
+import { storeInstance, history } from "./Store";
 
 // console.log('xxxxxxxx', 445);
 
-if (process.env.NODE_ENV === 'development' && !process.env.MICRO) {
+if (process.env.NODE_ENV === "development" && !process.env.MICRO) {
   // 开发环境直接渲染
   ReactDOM.render(
     <RootComponent
@@ -15,16 +15,16 @@ if (process.env.NODE_ENV === 'development' && !process.env.MICRO) {
       store={storeInstance}
       globalEventDistributor={storeInstance}
     />,
-    document.getElementById('root')
+    document.getElementById("root")
   );
 }
 
 function ensureMount(cb) {
   let timer = 1;
-  console.log('sub1-app.mount.ensureMount');
+  console.log("sub1-app.mount.ensureMount");
   const callback = () => {
-    if (document.querySelector('#subapp')) {
-      console.log('sub1-app.mount.ensureMount.find.subapp');
+    if (document.querySelector("#subapp")) {
+      console.log("sub1-app.mount.ensureMount.find.subapp");
       clearInterval(timer);
       timer = null;
       cb();
@@ -40,32 +40,15 @@ function ensureMount(cb) {
 const reactLifecycles = singleSpaReact({
   React,
   ReactDOM,
-  // rootComponent: props => {
-  //   console.log('sub1-app.rootComponent', props);
-  //   return (
-  //     <RootComponent
-  //       history={props.store.history}
-  //       store={props.store.storeInstance}
-  //       globalEventDistributor={props.globalEventDistributor}
-  //     />
-  //   );
-  // },
-  loadRootComponent: () => {
-    console.log('sub1-app.mount.loadRootComponent.initial');
-    return new Promise((resolve) => {
-      ensureMount(() =>
-        resolve((props) => {
-          console.log('sub1-app.mount.loadRootComponent.appendChild', props);
-          return (
-            <RootComponent
-              history={props.store.history}
-              store={props.store.storeInstance}
-              globalEventDistributor={props.globalEventDistributor}
-            />
-          );
-        })
-      );
-    });
+  rootComponent: (props) => {
+    console.log("sub1-app.mount.loadRootComponent.appendChild", props);
+    return (
+      <RootComponent
+        history={props.store.history}
+        store={props.store.storeInstance}
+        globalEventDistributor={props.globalEventDistributor}
+      />
+    );
   },
   // 可能会有加载顺序的问题
   domElementGetter,
@@ -73,28 +56,32 @@ const reactLifecycles = singleSpaReact({
 
 // function domElementGetter() {
 //   // Make sure there is a div for us to render into
-//   let el = document.getElementById('sub1-app');
+//   let el = document.getElementById("sub1-app");
 //   if (!el) {
-//     el = document.createElement('div');
-//     el.id = 'sub1-app';
-//     document.getElementById('subapp').appendChild(el);
+//     el = document.createElement("div");
+//     el.id = "sub1-app";
+//     console.log("xcvxcxcccc", document.querySelector("#subapp"));
+
+//     (
+//       document.querySelector("#subapp") || { appendChild: (m) => m }
+//     ).appendChild(el);
 //   }
 
 //   return el;
 // }
 
 function domElementGetter() {
-  let el = document.getElementById('sub1-app-page');
+  let el = document.getElementById("sub1-app-page");
   if (!el) {
-    el = document.createElement('div');
-    el.id = 'sub1-app-page';
+    el = document.createElement("div");
+    el.id = "sub1-app-page";
   }
 
   let timer = 1;
 
   const callback = () => {
-    if (document.querySelector('#subapp')) {
-      document.querySelector('#subapp').appendChild(el);
+    if (document.querySelector("#subapp")) {
+      document.querySelector("#subapp").appendChild(el);
       clearInterval(timer);
       timer = null;
     }
@@ -106,58 +93,8 @@ function domElementGetter() {
   timer && (timer = setInterval(callback, 100));
 
   return el;
-
-  // return document.querySelector('.ant-layout-content #sub-module');
-  // return document.getElementById('root');
 }
 
 export const bootstrap = [reactLifecycles.bootstrap];
-// export const mount = [reactLifecycles.mount];
-export async function mount(props) {
-  const { globalEventDistributor } = props;
-  const { base: baseState } = globalEventDistributor.getState();
-  const { account } = baseState;
-  console.log('sub1-app.mount.initital', baseState);
-  /* Note：
-   * 这里要确保 mount 的时候 account 信息已经加载好
-   */
-
-  // 如果 base 的用户信息已经加载好，直接 mount app；
-  // 否则 dispatch 一下，会在 currentEmp 加载好后执行mount
-  const baseAppIsOk = account && account.currentEmpLoading === false;
-
-  if (baseAppIsOk) {
-    console.log('sub1-app.mount.mount_app1', baseState);
-    return reactLifecycles.mount(props);
-
-    // return new Promise(resolve => {
-    //   console.log('sub1-app.mount.waitting_doc', props);
-    //   setTimeout(() => {
-    //     resolve(reactLifecycles.mount(props));
-    //   }, 3000);
-    //   // ensureMount(() => {
-    //   //   resolve(reactLifecycles.mount(props));
-    //   // });
-    // });
-  }
-
-  return new Promise((resolve) => {
-    console.log('sub1-app.mount.register_app', baseState);
-
-    globalEventDistributor.dispatch({
-      type: 'REGISTER_APP',
-      payload: {
-        mount: () => {
-          console.log('sub1-app.mount.mount_app2', baseState);
-          resolve(reactLifecycles.mount(props));
-        },
-      },
-    });
-  });
-}
+export const mount = [reactLifecycles.mount];
 export const unmount = [reactLifecycles.unmount];
-
-// // If you want your app to work offline and load faster, you can change
-// // unregister() to register() below. Note this comes with some pitfalls.
-// // Learn more about service workers: https://bit.ly/CRA-PWA
-// serviceWorker.unregister();

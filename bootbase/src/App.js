@@ -1,13 +1,22 @@
 import "./App.css";
 import React, { useState, useCallback, useEffect } from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { Layout, Menu, Icon, Spin, message, Button } from "antd";
 import { dynamic, injectReducer } from "hsp-utils";
+import { registerSubApps } from "./utils/singleSpaHelper";
 
-import actions from "@/_global/actions";
-import appReducer from "@/_global/reducers/app";
-import accountReducer from "@/_global/reducers/account";
+// import actions from "@/_global/actions";
+// import appReducer from "@/_global/reducers/app";
+// import accountReducer from "@/_global/reducers/account";
+
+const getCurrent = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ id: "xiaoming", name: "xiaoming" });
+    }, 1000);
+  });
+};
 
 const { Header, Sider, Content } = Layout;
 const menuList = [
@@ -22,6 +31,7 @@ const menuList = [
     children: [{ key: "k3-0", title: "/Sub1App/Home", link: "/sub1-app/home" }],
   },
   { key: "k5", icon: "shop", title: "Sub2App", link: "/sub2-app" },
+  { key: "k6", icon: "shop", title: "HomeApp", link: "/homepage-app" },
 ];
 
 const { SubMenu } = Menu;
@@ -57,10 +67,34 @@ function renderMenu(menus) {
 const User = dynamic(() => import("./User"));
 const About = dynamic(() => import("./About"));
 
+function getHomeUrl() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve("/user");
+    }, 1000);
+  });
+}
+
 function Home() {
+  const [loading, setLoading] = useState(true);
+  const [path, setPath] = useState("");
+  console.log("这是什么鬼啊");
+
+  useEffect(() => {
+    setLoading(true);
+    getHomeUrl().then((path) => {
+      setLoading(false);
+      setPath(path);
+    });
+  }, []);
+
+  if (loading) return <Spin />;
+
+  if (path) return <Redirect to={path} />;
+
   return (
     <div>
-      <h2>Home</h2>
+      <h2>Hello,Home</h2>
     </div>
   );
 }
@@ -71,29 +105,31 @@ function Home() {
 // }
 
 function App({
+  loading,
   history,
   globalEventDistributor,
-  getCurrent,
-  setCurrentMenuKey,
-  loading,
-  mountApp,
-  registerApp,
+
   ...rest
 }) {
   const [collapsed, setCollapsed] = useState(false);
+  // const [loading, setLoading] = useState(true);
   console.log("rest", rest);
   useEffect(() => {
-    // registerApp({
-    //   mount: () => {
-    //     console.log('portal-app.first.mount');
-    //     // resolve(reactLifecycles.mount(props));
-    //   },
+    // setLoading(true);
+    // getCurrent().then((currentUser) => {
+    //   setLoading(false);
+    //   registerSubApps(globalEventDistributor, () => {
+    //     globalEventDistributor.dispatch({
+    //       type: "CURRENT_EMP",
+    //       payload: currentUser,
+    //     });
+    //     globalEventDistributor.dispatch({
+    //       type: "APP_LOADING",
+    //       payload: false,
+    //     });
+    //   });
+    //   mountApp();
     // });
-
-    getCurrent().then(() => {
-      // globalEventDistributor
-      mountApp();
-    });
   }, []);
 
   const toggle = useCallback(() => {
@@ -138,7 +174,7 @@ function App({
             type={collapsed ? "menu-unfold" : "menu-fold"}
             onClick={toggle}
           />
-          <Button
+          {/* <Button
             onClick={() => {
               new Promise((resolve) => {
                 setTimeout(() => {
@@ -152,7 +188,7 @@ function App({
             }}
           >
             Click
-          </Button>
+          </Button> */}
         </Header>
         <Content
           id="subapp"
@@ -161,13 +197,12 @@ function App({
             padding: 24,
             background: "#fff",
             minHeight: "calc(100vh - 112px)",
+            position:"relative"
           }}
         >
           <Switch>
             <Route path="/user" component={User} />
             <Route path="/about" component={About} />
-
-            {/* <Route path='/*-app' component={SubApp} /> */}
             <Route
               path={"/*-app"}
               render={({ location }) => {
@@ -182,7 +217,8 @@ function App({
                 return <div />;
               }}
             />
-            <Route exact path="/" component={Home} />
+            {/* <Route exact path="/" component={Home} /> */}
+            <Route component={Home} />
             {/* <Route render={() => <div id='maincontent'></div>} /> */}
           </Switch>
         </Content>
@@ -191,17 +227,17 @@ function App({
   );
 }
 
-const withReducer = injectReducer([
-  { key: "account", reducer: accountReducer },
-]);
+// const withReducer = injectReducer([
+//   { key: "account", reducer: accountReducer },
+// ]);
 const mapStateToProps = (state) => {
   console.log("base-app.state", state);
-  return { loading: state.account.currentEmpLoading };
+  return { loading: state._root.appLoading };
 };
 const mapDispatchToProps = {
-  getCurrent: actions.account.getCurrent,
+  // getCurrent: actions.account.getCurrent,
   // setCurrentMenuKey: payload => ({ type: 'REGISTER_APP', payload }),
-  registerApp: (payload) => ({ type: "REGISTER_APP", payload }),
-  mountApp: () => ({ type: "MOUNT_APP" }),
+  // registerApp: (payload) => ({ type: "REGISTER_APP", payload }),
+  // mountApp: () => ({ type: "MOUNT_APP" }),
 };
-export default withReducer(connect(mapStateToProps, mapDispatchToProps)(App));
+export default connect(mapStateToProps, mapDispatchToProps)(App);

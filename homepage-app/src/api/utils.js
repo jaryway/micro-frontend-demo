@@ -1,7 +1,8 @@
-import Fly from "flyio/dist/npm/fly";
-import { Cookies } from "react-cookie";
-import { Base64 } from "js-base64";
-import { message } from "antd";
+import Fly from 'flyio/dist/npm/fly';
+import { Cookies } from 'react-cookie';
+import { Base64 } from 'js-base64';
+import md5 from 'crypto-js/md5';
+import { message } from 'antd';
 
 let showMessage;
 
@@ -11,21 +12,21 @@ function createApi() {
   fly.config.baseURL = `${window.CONFIG.API_BASE_URL}`;
   fly.interceptors.response.use(responseOkHandler, responseErrorHandler);
 
-  function api(url, newOptions = { method: "GET" }) {
+  function api(url, newOptions = { method: 'GET' }) {
     const { data = null, auth } = newOptions;
 
     // 登录接口
     if (auth) {
       const { username, password } = auth;
       const encode = window.btoa || Base64.encode;
-      newOptions.headers.Authorization = `Basic ${encode(username + ":" + password)}`;
+      newOptions.headers.Authorization = `Basic ${encode(username + ':' + password)}`;
     }
 
     return fly.request(url, null, { ...newOptions, body: data });
   }
 
-  api.get = (url, newOptions) => api(url, { ...newOptions, method: "GET" });
-  api.post = (url, newOptions) => api(url, { ...newOptions, method: "POST" });
+  api.get = (url, newOptions) => api(url, { ...newOptions, method: 'GET' });
+  api.post = (url, newOptions) => api(url, { ...newOptions, method: 'POST' });
 
   return api;
 }
@@ -41,10 +42,12 @@ export async function getAccessTokenAsync() {
   // 已登录，一切正常
   if (loggedin && !expiresed && access_token) return access_token;
 
-  let accessToken = "";
+  let accessToken = '';
 
-  // 已经登录，access_token 已过期，去刷新 access_token
-  if (loggedin && expiresed && refresh_token) {
+  if (process.env.NODE_ENV === 'development') {
+    accessToken = await getTokenFromUrl();
+  } else if (loggedin && expiresed && refresh_token) {
+    // 已经登录，access_token 已过期，去刷新 access_token
     accessToken = await refreshTokenAsync(refresh_token);
   }
 
@@ -65,8 +68,8 @@ export function checkLoggedIn() {
  */
 export function getTokenInfoFromLocalStorage() {
   const cookies = new Cookies();
-  const token = JSON.parse(localStorage.getItem("token") || null);
-  const cookieToken = cookies.get("token");
+  const token = JSON.parse(localStorage.getItem('token') || null);
+  const cookieToken = cookies.get('token');
 
   // cookie和localStorage中都没有token
   if (!cookieToken || !token) {
@@ -126,7 +129,7 @@ function responseOkHandler(response) {
   // }
 
   // if (errMessage === "系统错误") {
-  showMessage(errMessage || "发生网络错误");
+  showMessage(errMessage || '发生网络错误');
   // }
 
   return Promise.reject(response.data || response);
@@ -138,10 +141,10 @@ function responseOkHandler(response) {
  */
 function responseErrorHandler(error) {
   const { message: errMessage, response } = error || {};
-  const { message: message1 } = response && response.data || {};
+  const { message: message1 } = (response && response.data) || {};
   console.log(error);
   // todo: 谈个提示，发生网络错误
-  showMessage(message1 || errMessage || "网络错误");
+  showMessage(message1 || errMessage || '网络错误');
   return error;
 }
 
@@ -151,23 +154,75 @@ function responseErrorHandler(error) {
  */
 async function refreshTokenAsync(refresh_token) {
   //
-  const resp = await normalApi.post("/uaa/api/oauth/token", {
-    params: { grant_type: "refresh_token", refresh_token },
+  const resp = await normalApi.post('/uaa/api/oauth/token', {
+    params: { grant_type: 'refresh_token', refresh_token },
     auth: {
-      username: "$2a$10$XOVs4Z1YtPKqKwQVywG9j.xLAqXYRQLGZMGMrZDNbtl6pUC0Weteq",
-      password: "$2a$10$XOVs4Z1YtPKqKwQVywG9j.xLAqXYRQLGZMGMrZDNbtl6pUC0Weteq"
-    }
+      username: '$2a$10$XOVs4Z1YtPKqKwQVywG9j.xLAqXYRQLGZMGMrZDNbtl6pUC0Weteq',
+      password: '$2a$10$XOVs4Z1YtPKqKwQVywG9j.xLAqXYRQLGZMGMrZDNbtl6pUC0Weteq',
+    },
   });
 
   const { access_token, expires_in } = resp.data;
 
-  console.log("access token 刷新成功", access_token);
+  console.log('access token 刷新成功', access_token);
 
   // 提前 10s 过期
   const expires = Date.now() / 1000 + (expires_in - 10);
   const token = { ...resp.data, expires };
 
-  localStorage.setItem("token", JSON.stringify(token));
+  localStorage.setItem('token', JSON.stringify(token));
 
   return access_token;
+}
+
+/** helper Methods
+ * --------------------------------------------------------*/
+/**
+ * 从 url 中获取用户名和密码
+ */
+function getUserNameAndPasswordFromUrl() {
+  // if (window.location.search.length < 2) return { username: 'superadmin@superadmin', password: 'admin' };
+  if (window.location.search.length < 2) {
+    // return { username: 'wjm_admin@cwb', password: '123456' };
+    // return { username: 'wjm_admin@cwb', password: md5(md5('1qaz@WSX').toString()).toString() };
+    return { username: 'xiao@zchl', password: md5(md5('1qaz@WSX').toString()).toString() };
+  } // 普通用户
+
+  const query = window.location.search
+    .slice(1)
+    .split('&')
+    .map(m => m.split('='))
+    .reduce((prev, [key, value]) => ({ ...prev, [key]: value }), {});
+
+  return { username: query.un, password: query.pwd };
+}
+
+async function getTokenFromUrl() {
+  // console.log("getTokenFromUrl");
+  const data = Object.entries({
+    grant_type: 'password',
+    ...getUserNameAndPasswordFromUrl(),
+  })
+    .map(m => m.join('='))
+    .join('&');
+
+  return normalApi('/uaa/api/oauth/token', {
+    method: 'post',
+    // 使用 application/x-www-form-urlencoded 提交数据
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    auth: {
+      username: '$2a$10$XOVs4Z1YtPKqKwQVywG9j.xLAqXYRQLGZMGMrZDNbtl6pUC0Weteq',
+      password: '$2a$10$XOVs4Z1YtPKqKwQVywG9j.xLAqXYRQLGZMGMrZDNbtl6pUC0Weteq',
+    },
+    data,
+  })
+    .then(resp => {
+      // console.log(resp, "resp");
+      return resp.data.access_token;
+    })
+    .catch(err => {
+      console.log('err', err);
+      // resolve("");
+      return '';
+    });
 }

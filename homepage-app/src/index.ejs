@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<%= htmlWebpackPlugin.files.manifest %>
+<title>运营管理系统-控制台</title>
+<% htmlWebpackPlugin.files.css.forEach(function(item,i){%>
+<style><%= compilation.assets[item.substr(htmlWebpackPlugin.files.publicPath.length)].source() %></style>
+<% }) %>
+</head>
+<script>
+window.CONFIG={
+  API_BASE_URL:"http://192.10.169.212:31111",
+  IOFFICE_URL:"", // _yj
+  LOGIN_PAGE:"",
+  CUSTOM_ICON_NAMES:["eye-close","patient-feedback","complaint","doctor-file","ibook","my-profile","my-schedule","cus-service","plugin","upgrade","feedback","content-p","folder-2","text","content","leader","division","legalentity","group","excel","app","isv","more","more-h","flow","signature","hr","res-report","fill-form","notice","finish","folder-open-1","ques","tran-data","add","person-add","info-manage","bus-manage","email","fold","unfold","word","zip","send","import","pack-down","alarm","image","link-ext","quote","flower","select","checkbox","radio","text-input","textarea","replay","open-eye","closed-eye","tick","exit-fullscreen","full-screen","seal","shut-down","cancel","handing","location","inventory","meeting","custom-info-manage","news-notices","bbs","doc-manage","setting-1"],
+  ANDROID_APP_URL:'http://120.79.129.67:7777/ssmpHelper_v1.0.1_legu.apk',
+  IOS_APP_URL:'https://apps.apple.com/cn/app/%E8%88%B9%E6%B5%B7%E5%8A%A9%E6%89%8B/id1473250852'
+};
+</script>
+<!-- <script src="/libs/qrcode.min.js?v=100"></script> -->
+<body style="margin:0;padding:0">
+<!-- <link rel="stylesheet/less" type="text/css" href="/color.less" /> -->
+<link rel="stylesheet/less" type="text/css" href="/color.less" />
+<script>
+  window.appRegisterType='split';// 注册方式=split|merge //拆分|合并
+  // window.deployApps=['base-app','punch-app'];
+  window.deployApps=['app-workflow','app-box'];
+  window.less = { async: false, env: 'production' }; </script>
+<script type="text/javascript" src="/libs/less.min.js"></script>
+<div id="root"></div>
+<script src="https://cdn.bootcdn.net/ajax/libs/systemjs/6.3.2/system.min.js"></script>
+<script type="systemjs-importmap">
+  {
+    "imports": {
+      "react": "https://cdn.bootcdn.net/ajax/libs/react/16.13.1/umd/react.production.min.js",
+      "react-dom": "https://cdn.bootcdn.net/ajax/libs/react-dom/16.13.1/umd/react-dom.production.min.js",
+      "react-router-dom":"https://cdn.bootcdn.net/ajax/libs/react-router-dom/5.2.0/react-router-dom.min.js",
+      "prop-types":"https://cdn.bootcdn.net/ajax/libs/prop-types/15.7.2/prop-types.min.js",
+      "redux":"https://cdn.bootcdn.net/ajax/libs/redux/4.0.5/redux.js",
+      "redux-thunk":"https://cdn.bootcdn.net/ajax/libs/redux-thunk/2.3.0/redux-thunk.min.js",
+      "react-redux":"https://cdn.bootcdn.net/ajax/libs/react-redux/7.2.0/react-redux.min.js",
+      "redux-promise-middleware":"https://cdn.bootcdn.net/ajax/libs/redux-promise-middleware/5.1.1/redux-promise-middleware.min.js",
+      "single-spa":"https://cdn.bootcdn.net/ajax/libs/single-spa/5.5.1/umd/single-spa.min.js",
+      "single-spa-react":"https://unpkg.com/single-spa-react@2.14.0/lib/single-spa-react.js",
+      "history":"https://cdn.bootcdn.net/ajax/libs/history/4.10.1/history.min.js"
+    }
+  }
+</script>
+<script src="https://cdn.bootcdn.net/ajax/libs/systemjs/6.3.2/extras/amd.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/systemjs/6.3.2/extras/use-default.min.js"></script>
+<!-- <script src="https://cdn.bootcdn.net/ajax/libs/systemjs/6.3.2/extras/named-register.min.js"></script>-->
+<script src="/libs/systemjs/extras/css.js"></script>
+<!-- <script type="systemjs-importmap" src="%PUBLIC_URL%/importmap.json"></script> -->
+
+<% htmlWebpackPlugin.files.js.forEach(function(item,i){%>
+<script><%= compilation.assets[item.substr(htmlWebpackPlugin.files.publicPath.length)].source() %></script>
+<% }) %>
+<script>
+<% htmlWebpackPlugin.files.js.forEach(function(item,i){%>
+ System.import('<%= item %>');
+<% }) %>
+</script>
+</body>
+</html>

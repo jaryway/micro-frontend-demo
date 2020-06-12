@@ -43,7 +43,7 @@ function to(state = initialState, action) {
   if (action.type !== "to" && action.owner !== "base")
     return { ...state, path: action.path };
 
-  console.log("sub1-app.RootComponent-to", action, state, history);
+  console.log("base-app.RootComponent-to", action, state, history);
 
   history.replace(action.path);
 
@@ -51,6 +51,21 @@ function to(state = initialState, action) {
 }
 
 function _root(state = { registerApps: [], rootActiveMenuKey: "k1" }, action) {
+  // app 是否在加载中，比如 加载用户信息、加载菜单信息
+  if (action.type === "APP_LOADING") {
+    return { ...state, appLoading: action.payload };
+  }
+
+  // 是否在加载子应用中
+  if (action.type === "SUB_APP_LOADING") {
+    console.log("SUB_APP_LOADING", action.payload);
+    return { ...state, subAppLoading: action.payload };
+  }
+
+  if (action.type === "CURRENT_EMP") {
+    return { ...state, currentEmp: action.payload };
+  }
+
   // 注册子 App
   if (action.type === "REGISTER_APP") {
     console.log("base-app.REGISTER_APP", action, state);
@@ -85,13 +100,13 @@ function _root(state = { registerApps: [], rootActiveMenuKey: "k1" }, action) {
 
 const globalReducers = { namespace: () => "base", render, to, _root };
 const createReducer = (asyncReducers) => {
-  console.log("base-app.createReducer", asyncReducers);
+  // console.log("base-app.createReducer", asyncReducers);
   const appReducer = combineReducers(asyncReducers);
   return (state, action) => {
-    console.log("base-app.createReducer.1", action, state);
+    // console.log("base-app.createReducer.1", action, state);
     // 把这个 app 的 state 设为初始值，依赖 hsp-utils > 1.3
     if (action.type === "RESET_APP") {
-      console.log("base-app.createReducer.RESET_APP", action);
+      // console.log("base-app.createReducer.RESET_APP", action);
       state = undefined;
     }
     return appReducer(state, action);
